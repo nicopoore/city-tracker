@@ -1,0 +1,7 @@
+.container {
+  flex: 5 1;
+  background-color: #A2C6D1;
+  height: 96%;
+  margin-right: 1rem;
+  border-radius: .5rem;
+}
