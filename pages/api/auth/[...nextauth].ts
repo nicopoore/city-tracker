@@ -1,0 +1,49 @@
+import NextAuth from 'next-auth';
+import Providers from 'next-auth/Providers';
+import { NextApiRequest, NextApiResponse } from 'next'
+
+interface Session {
+  expires: string,
+  user: User
+  foo?: string
+}
+
+interface User {
+  name: string,
+  email: string,
+  image: string,
+  uid?: string,
+}
+
+interface DummyObject {
+  [name: string]: any
+}
+
+const options = {
+  callbacks: {
+    jwt: async (token: DummyObject, user: DummyObject, account: DummyObject, profile: DummyObject, isNewUser: DummyObject): Promise<any> => {
+      if (user) {
+        token.uid = user.id;
+      }
+      return Promise.resolve(token)
+    },
+    session: async (session: Session, user: User): Promise<any> => {
+      session.user.uid = user.uid
+      return Promise.resolve(session)
+    }
+  },
+  providers: [
+    Providers.Google({
+      clientId: process.env.GOOGLE_ID,
+      clientSecret: process.env.GOOGLE_SECRET
+    })
+  ],
+  database: process.env.MONGODB_URI,
+  session: {
+    jwt: true,
+    maxAge: 30*24*60*60
+  },
+  debug: true,
+}
+
+export default (req: NextApiRequest, res: NextApiResponse) => NextAuth(req, res, options)
