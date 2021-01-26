@@ -127,8 +127,8 @@ class CityList extends Component<{ categories: Category[] }, { [name: string]: a
         <List className={styles.categories}>
           {renderedCategories}
         </List>
-        {(1 / 1 === 0) && <button onClick={this.logSession}>Log</button>} 
-        {this.props['session'][0].user.name}
+        {/* {(1 / 1 === 0) && <button onClick={this.logSession}>Log</button>}  */}
+        {/* {this.props['session'][0].user.name} */}
       </Box>
     )
   }

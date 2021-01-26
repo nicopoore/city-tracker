@@ -16,6 +16,7 @@ const fetcher = async url => fetch(url, {
 
 const Home: React.FC = () => {
   const [session, loading] = useSession()
+  
   if (loading) {
     return <p>Loading map...</p>
   }
@@ -51,20 +52,5 @@ const Home: React.FC = () => {
     </Box>
   )
 }
-
-// export const getServerSideProps: GetServerSideProps = async (ctx): Promise<any> => {
-//   await connectToDatabase()
-//   const session = await getSession(ctx)
-//   const reqId = session.user.uid
-
-//   const result = await Category.find({ userId: reqId })
-//   const categories = result.map(doc => {
-//     const category = doc.toObject()
-//     category._id = category._id.toString()
-//     category.userId = category.userId.toString()
-//     return category
-//   })
-//   return { props: { categories: categories }}
-// }
 
 export default Home;

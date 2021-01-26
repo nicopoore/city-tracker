@@ -3,6 +3,7 @@ import { Component } from 'react'
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
 import { Room } from '@material-ui/icons'
 import { Category } from '../types'
+import axios from 'axios'
 
 interface AddCityProps {
   open: boolean,
@@ -12,7 +13,8 @@ interface AddCityProps {
 
 interface AddCityState {
   place_id: string,
-  category: string 
+  category_name: string,
+  category_id: string
 }
 
 class AddCity extends Component<AddCityProps, AddCityState> {
@@ -20,7 +22,8 @@ class AddCity extends Component<AddCityProps, AddCityState> {
     super(props)
     this.state = {
       place_id: '',
-      category: ''
+      category_name: '',
+      category_id: ''
     }
     this.handleCityAdded = this.handleCityAdded.bind(this)
     this.handleSelectCategory = this.handleSelectCategory.bind(this)
@@ -31,7 +34,8 @@ class AddCity extends Component<AddCityProps, AddCityState> {
   componentDidMount = (): void => {
     this.setState({
       place_id: '',
-      category: ''
+      category_name: '',
+      category_id: '',
     })
   }
 
@@ -42,43 +46,31 @@ class AddCity extends Component<AddCityProps, AddCityState> {
   }
 
   handleSubmit = async (): Promise<void> => {
-    // Not currently working - works with GET request to /api/cities/[place_id]
     const postData = {
       place_id: this.state.place_id,
-      category: this.state.category
+      category_id: this.state.category_id
     }
-    try {
-      const resp = await fetch('/api/cities', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        mode: 'cors',
-        cache: 'no-cache',
-        credentials: 'same-origin',
-        body: JSON.stringify(postData),
-
-      })
-      console.log(resp)
-    } catch (err) {
-      console.error(err)
-    }
+    const resp = await axios.post('/api/cities', postData)
+    
     this.setState({
       place_id: '',
-      category: ''
+      category_name: '',
+      category_id: ''
     })
     this.props.closeAddCity()
   }
 
-  handleSelectCategory = (category: string): void => {
+  handleSelectCategory = (category_name: string, category_id: string): void => {
     this.setState({
-      category: category
+      category_name: category_name,
+      category_id: category_id
     })
   }
 
   handleDeselectCategory = (): void => {
     this.setState({
-      category: ''
+      category_name: '',
+      category_id: ''
     })
   }
 
@@ -98,13 +90,13 @@ class AddCity extends Component<AddCityProps, AddCityState> {
         scroll={"body"} 
         PaperProps={{ style: { overflowY: "visible" }}}
       >
-        <DialogTitle id="add-city-title">{this.state.category === '' ? 'Add city' : `Add city to "${this.state.category}"`}</DialogTitle>
-        {this.state.category === '' ? (
+        <DialogTitle id="add-city-title">{this.state.category_name === '' ? 'Add city' : `Add city to "${this.state.category_name}"`}</DialogTitle>
+        {this.state.category_name === '' ? (
           <DialogContent style={{ overflowY: "visible" }}>
             <DialogContentText>Select the city's category</DialogContentText>
             <List>
               {this.props.categories.map(category => (
-                <ListItem button onClick={() => this.handleSelectCategory(category["name"])}>
+                <ListItem button onClick={() => this.handleSelectCategory(category["name"], category["_id"].toString())}>
                   <Room style={{color: category["color"], marginRight: "1rem"}} />
                   <ListItemText 
                     primary={category["name"]} 

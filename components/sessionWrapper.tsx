@@ -3,7 +3,7 @@ import { useSession } from "next-auth/client"
 
 const withSession = (ClassComponent) => props => {
   const session = useSession()
-  
+
   if (ClassComponent.prototype.render) {
     return <ClassComponent session={session} {...props}/>
   }

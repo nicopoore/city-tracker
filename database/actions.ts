@@ -1,34 +1,79 @@
 import mongoose from 'mongoose';
-import City from './models/city'
-import Category from './models/category'
+import { Category, CategoryRecord } from '../components/types'
+import { ObjectId } from 'mongodb'
 
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true }).
-  catch(err => console.log(err))
+export const getCategories = async (db, userId: ObjectId): Promise<CategoryRecord[]> => {
+  /* Grab given user's categories */
 
-mongoose.connection.on('error', err => {
-  console.log(err)
-})
+  const categories = await db
+    .collection("categories")
+    .find({ userId: userId })
+    .toArray()
 
-export const addNewCity = (name: string, country: string, coordinates: string) => {
-  let city = new City({name: name, country: country, coordinates: coordinates})
-  return city.save()
+  return categories
 }
 
-export const addNewCategory = (userId: mongoose.Types.ObjectId, name: string, color: string) => {
-  let category = new Category({userId: userId, name: name, color: color, cities: []})
-  return category.save()
+export const addNewCategory = async (db, userId: ObjectId, name: string, color: string) => {
+  const category = await db
+    .collection("categories")
+    .insertOne({
+      name: name,
+      userId: userId,
+      color: color,
+      cities: []
+    })
+
+  if (category.insertedCount === 0) return Promise.reject({ statusText: "Failed to insert category", status: 404 })
+  return category
 }
 
-export const handleNewUser = (userId: mongoose.Types.ObjectId) => {
-  console.log('hello')
+export const handleNewUser = async (db, userId: ObjectId) => {
+  /* Create default categories for given userId */
 
-  try {
-    addNewCategory(userId, 'Visited', '#f00')
-    addNewCategory(userId, 'To visit', '#00f')
-    addNewCategory(userId, 'Favorites', '#ff0')
-  } catch (err) {
-    console.log(err)
-  }
+  const defaultCategories = [
+    { userId: userId, name: 'Visited', color: '#f00', cities: [] },
+    { userId: userId, name: 'To visit', color: '#00f', cities: [] },
+    { userId: userId, name: 'Favorites', color: '#ff0', cities: [] },
+  ]
+
+  let newUserCategories = await db
+    .collection("categories")
+    .insertMany(defaultCategories)
+
+  // Handle error while inserting
+  if (newUserCategories.insertedCount === 0) return Promise.reject({ statusText: "Failed to insert categories", status: 404 })
+  return newUserCategories
 }
 
-export const showUserCategories = (userId: mongoose.Types.ObjectId) => Category.find({ userId: userId })
+export const createCity = async (db, place_id: string, name: string, country: string, coordinates: number[]) => {
+  /* Check database for existing city document by place_id, if it doesn't exist create it. */
+
+  const city = await db
+    .collection("cities")
+    .updateOne(
+      { place_id: place_id },
+      {
+        $setOnInsert: {
+          name: name,
+          country: country,
+          coordinates: coordinates,
+          place_id: place_id
+        }
+      },
+      { upsert: true }
+    )
+
+  // Handle error while inserting
+   if (city.upsertedCount === 0 && city.matchedCount === 0) return Promise.reject({ statusText: "Failed to insert categories", status: 404 })
+  return city
+}
+
+export const addCityToCategory = async (db, place_id: string, category_id: ObjectId): Promise<any> => {
+  /* Check category for city, if the city isn't in the category's cities array, add it */
+
+  const category = await db
+    .collection("categories")
+    .updateOne({ _id: category_id }, { $addToSet: { cities: place_id }})
+
+  return category
+}
