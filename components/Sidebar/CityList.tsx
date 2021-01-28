@@ -3,64 +3,20 @@ import styles from '../../styles/List.module.css'
 import { Box, Collapse, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
 import { ExpandLess, ExpandMore, Room } from '@material-ui/icons'
 import { City, NestedCities } from '../types'
-import { Category } from '../types'
+import { Category, fullCitiesObject } from '../types'
+import axios from 'axios'
+import { ObjectId } from 'mongodb'
 
-// const defaultState: { [name: string]: any } = {
-//   cities: [
-//     {
-//       uniqueID: 0, // ExampleID, would be provided by database
-//       name: "Buenos Aires",
-//       country: "Argentina",
-//       coordinates: [-34.6037, -58.3816]
-//     },
-//     {
-//       uniqueID: 1, // ExampleID, would be provided by database
-//       name: "Sao Paulo",
-//       country: "Brazil",
-//       coordinates: [-34.6037, -58.3816]
-//     },
-//     {
-//       uniqueID: 2, // ExampleID, would be provided by database
-//       name: "New York",
-//       country: "United States of America",
-//       coordinates: [34.6037, -58.3816]
-//     },
-//     {
-//       uniqueID: 3, // ExampleID, would be provided by database
-//       name: "Córdoba",
-//       country: "Argentina",
-//       coordinates: [34.6037, -58.3816]
-//     },
-//     {
-//       uniqueID: 4, // ExampleID, would be provided by database
-//       name: "Paris",
-//       country: "France",
-//       coordinates: [34.6037, -58.3816]
-//     }
-//   ],
-//   categories: {
-//     "Visited": {
-//       color: "#ff0000", cities: [0, 3, 2]
-//     },
-//     "To visit": {
-//       color: "#0000ff", cities: [1]
-//     },
-//     "Favourites": {
-//       color: "#ffff00", cities: [4]
-//     }
-//   }
-// }
-
-class CityList extends Component<{ categories: Category[] }, { [name: string]: any }> {
+class CityList extends Component<{ cities: fullCitiesObject }, { [name: string]: any }> {
   constructor(props) {
     super(props);
     this.state = {}
   }
 
   nestDatabase = (flat: City[]): NestedCities => {
-    return flat.reduce((nested: { [name: string]: string[] }, city: City) => {
+    return flat.reduce((nested: { [name: string]: { name: string, place_id: string }[] }, city: City) => {
         let country = nested[city["country"]] ||= []
-        country.push(city["name"])
+        country.push({ name: city["name"], place_id: city["place_id"] })
         return nested
       },
       {}
@@ -68,7 +24,7 @@ class CityList extends Component<{ categories: Category[] }, { [name: string]: a
   }
 
   renderCategory = (category: Category) => {
-    const filteredCities = [].filter(city => category.cities.includes(city.uniqueID))
+    const filteredCities = this.props.cities.cities.filter(city => category.cities.includes(city.place_id))
     const nestedArr = this.nestDatabase(filteredCities)
 
     return (
@@ -82,7 +38,7 @@ class CityList extends Component<{ categories: Category[] }, { [name: string]: a
         </ListItem>
         <Collapse component="li" in={this.state[category.name]}>
           <List className={styles.countries}>
-            {this.renderCountries(nestedArr)}
+            {this.renderCountries(category._id, nestedArr)}
           </List>
         </Collapse>
       </Box>
@@ -93,7 +49,7 @@ class CityList extends Component<{ categories: Category[] }, { [name: string]: a
     this.setState({ [e]: !this.state[e] })
   }
 
-  renderCountries = (countries: NestedCities) => {
+  renderCountries = (category_id: ObjectId, countries: NestedCities) => {
     return Object.keys(countries).map(country => (
       <Box>
         <ListItem key={country} onClick={this.handleItemClick.bind(this, country)} button>
@@ -102,33 +58,35 @@ class CityList extends Component<{ categories: Category[] }, { [name: string]: a
         </ListItem>
         <Collapse component="li" in={this.state[country]}>
           <List className={styles.cities}>
-            {this.renderCities(countries[country])}
+            {this.renderCities(category_id, countries[country])}
           </List>
         </Collapse>
       </Box>
     ))
   }
   
-  renderCities = (cities: string[]) => {
+  renderCities = (category_id: ObjectId, cities: { name: string, place_id: string }[]) => {
     return cities.map(city => (
-      <ListItem key={city}>{city}</ListItem>
+      <ListItem key={city["name"]} onClick={this.handleRemove.bind(this, {...city, category_id: category_id})}>{city["name"]}</ListItem>
     ))
   }
 
-  logSession = (): void => {
-    // Testing purposes only
-    console.log(this.props['session'])
+  handleRemove = async (e) => {
+    const postData = {
+      place_id: e.place_id,
+      category_id: e.category_id
+    }
+
+    const resp = await axios.post('/api/cities/remove', postData)
   }
 
   render() {
-    const renderedCategories = this.props.categories.map(category => this.renderCategory(category))
+    const renderedCategories = this.props.cities.categories.map(category => this.renderCategory(category))
     return (
       <Box className={styles.container}>
         <List className={styles.categories}>
           {renderedCategories}
         </List>
-        {/* {(1 / 1 === 0) && <button onClick={this.logSession}>Log</button>}  */}
-        {/* {this.props['session'][0].user.name} */}
       </Box>
     )
   }

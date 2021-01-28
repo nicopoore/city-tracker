@@ -1,26 +1,41 @@
+import { ObjectId } from 'mongodb'
+
 export interface City {
   name: string,
   country: string,
   coordinates: [number, number],
-  place_id
+  place_id: string
 }
 
-export interface CategoryRecord {
-  _id: string,
+export interface CityRecord {
+  _id: ObjectId,
   name: string,
-  userId: string,
-  color: string,
-  cities: number[],
-  __v: number
+  country: string,
+  coordinates: [number, number],
+  place_id: string
 }
 
 export interface Category {
+  _id: ObjectId,
   name: string,
-  userId: string,
+  userId: ObjectId,
   color: string,
-  cities: number[],
+  cities: string[],
+}
+
+export interface CategoryRecord {
+  _id: ObjectId,
+  name: string,
+  userId: ObjectId,
+  color: string,
+  cities: string[],
+}
+
+export interface fullCitiesObject {
+  categories: CategoryRecord[],
+  cities: CityRecord[]
 }
 
 export interface NestedCities {
-  [name: string]: string[]
+  [name: string]: { name: string, place_id: string }[]
 }

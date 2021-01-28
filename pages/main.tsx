@@ -38,7 +38,7 @@ const Home: React.FC = () => {
           </Head>
 
           <main className={styles.main}>
-            <Sidebar categories={data} />
+            <Sidebar cities={data} />
             <Map />
           </main>
         </>

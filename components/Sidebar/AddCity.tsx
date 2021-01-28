@@ -2,13 +2,13 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 import { Component } from 'react'
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
 import { Room } from '@material-ui/icons'
-import { Category } from '../types'
+import { fullCitiesObject } from '../types'
 import axios from 'axios'
 
 interface AddCityProps {
   open: boolean,
   closeAddCity: () => void,
-  categories: Category[]
+  cities: fullCitiesObject
 }
 
 interface AddCityState {
@@ -51,7 +51,7 @@ class AddCity extends Component<AddCityProps, AddCityState> {
       category_id: this.state.category_id
     }
     const resp = await axios.post('/api/cities', postData)
-    
+
     this.setState({
       place_id: '',
       category_name: '',
@@ -95,7 +95,7 @@ class AddCity extends Component<AddCityProps, AddCityState> {
           <DialogContent style={{ overflowY: "visible" }}>
             <DialogContentText>Select the city's category</DialogContentText>
             <List>
-              {this.props.categories.map(category => (
+              {this.props.cities.categories.map(category => (
                 <ListItem button onClick={() => this.handleSelectCategory(category["name"], category["_id"].toString())}>
                   <Room style={{color: category["color"], marginRight: "1rem"}} />
                   <ListItemText 

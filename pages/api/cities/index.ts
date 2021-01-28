@@ -4,7 +4,7 @@ import axios, { AxiosResponse } from "axios"
 import { ObjectId } from 'mongodb'
 
 import { connectToDatabase } from '../../../database/connect'
-import { handleNewUser, getCategories, createCity, addCityToCategory } from '../../../database/actions'
+import { handleNewUser, getUserCities, createCity, addCityToCategory } from '../../../database/actions'
 import { City } from '../../../components/types'
 
 const formatRawGoogle = (rawData: AxiosResponse<any>, place_id: string): City => {
@@ -20,6 +20,8 @@ const formatRawGoogle = (rawData: AxiosResponse<any>, place_id: string): City =>
 }
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
+
+  // Get session, userID and connect to DB
   const session = await getSession({ req })
   const reqId = new ObjectId(session.user.uid)
   const { db } = await connectToDatabase();
@@ -27,13 +29,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch(req.method) {
     case 'GET':
       // Get user's cities and categories
-      const categories = await getCategories(db, reqId)
+      const citiesObject = await getUserCities(db, reqId)
 
-      if (categories.length === 0) {
+      if (citiesObject.categories.length === 0) {
         handleNewUser(db, reqId)
       }
 
-      res.json(categories)
+      res.json(citiesObject)
       res.end()
       break;
 
@@ -58,6 +60,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const dbCity = await createCity(db, place_id, name, country, coordinates)
         const dbCategory = await addCityToCategory(db, place_id, newCategory)
 
+        if (dbCity && dbCategory) return res.status(200).end()
+        return res.send('Error adding city')
+
       } catch (err) {
         console.log('index.ts error: ', err)
         res.end()
@@ -65,7 +70,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       break;
 
     default:
-      res.send('No request method sent')
-      res.end()
+      res.status(405).end();
+      break;
   }
 }

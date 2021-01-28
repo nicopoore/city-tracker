@@ -1,19 +1,34 @@
 import mongoose from 'mongoose';
-import { Category, CategoryRecord } from '../components/types'
-import { ObjectId } from 'mongodb'
+import { CityRecord, CategoryRecord, fullCitiesObject } from '../components/types'
+import { ObjectId, Db } from 'mongodb'
 
-export const getCategories = async (db, userId: ObjectId): Promise<CategoryRecord[]> => {
-  /* Grab given user's categories */
+export const getUserCities = async (db: Db, userId: ObjectId): Promise<fullCitiesObject> => {
+  /* Grab given user's categories and cities */
 
+  // Grab user's categories
   const categories = await db
     .collection("categories")
     .find({ userId: userId })
     .toArray()
 
-  return categories
+  // Merge cities arrays from user's categories
+  const allCitiesArray = categories.reduce((acc: string[], category: CategoryRecord) => {
+    acc = acc.concat(category.cities)
+    return acc
+  }, [])
+  
+  // Use merged array to query full cities database
+  const cities = await db
+  .collection("cities")
+  .find({ place_id: { $in: allCitiesArray } }) // acá
+  .toArray()
+
+  return { categories: categories, cities: cities }
 }
 
-export const addNewCategory = async (db, userId: ObjectId, name: string, color: string) => {
+export const addNewCategory = async (db: Db, userId: ObjectId, name: string, color: string) => {
+  /* Create new empty category */
+
   const category = await db
     .collection("categories")
     .insertOne({
@@ -23,11 +38,12 @@ export const addNewCategory = async (db, userId: ObjectId, name: string, color: 
       cities: []
     })
 
+  // Handle error while inserting
   if (category.insertedCount === 0) return Promise.reject({ statusText: "Failed to insert category", status: 404 })
   return category
 }
 
-export const handleNewUser = async (db, userId: ObjectId) => {
+export const handleNewUser = async (db: Db, userId: ObjectId) => {
   /* Create default categories for given userId */
 
   const defaultCategories = [
@@ -45,7 +61,7 @@ export const handleNewUser = async (db, userId: ObjectId) => {
   return newUserCategories
 }
 
-export const createCity = async (db, place_id: string, name: string, country: string, coordinates: number[]) => {
+export const createCity = async (db: Db, place_id: string, name: string, country: string, coordinates: number[]) => {
   /* Check database for existing city document by place_id, if it doesn't exist create it. */
 
   const city = await db
@@ -68,12 +84,22 @@ export const createCity = async (db, place_id: string, name: string, country: st
   return city
 }
 
-export const addCityToCategory = async (db, place_id: string, category_id: ObjectId): Promise<any> => {
+export const addCityToCategory = async (db: Db, place_id: string, category_id: ObjectId): Promise<any> => {
   /* Check category for city, if the city isn't in the category's cities array, add it */
 
   const category = await db
     .collection("categories")
     .updateOne({ _id: category_id }, { $addToSet: { cities: place_id }})
 
+  return category
+}
+
+export const removeCityFromCategory = async (db: Db, place_id: string, category_id: ObjectId): Promise<any> => {
+  /* Remove city (place_id) from given category('s cities array) */
+
+  const category = await db
+    .collection("categories")
+    .updateOne({ _id: category_id }, { $pull: { cities: place_id }})
+  
   return category
 }
