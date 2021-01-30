@@ -1,56 +1,55 @@
-import Head from 'next/head'
-import styles from '../styles/Main.module.css'
-import { Map, Sidebar } from '../components'
-import { Box } from '@material-ui/core'
-import { signIn, useSession } from 'next-auth/client'
-import useSWR from 'swr'
+import Head from 'next/head';
+import { Map, Sidebar } from '../components';
+import { Box } from '@material-ui/core';
+import { signIn, useSession } from 'next-auth/client';
+import useSWR from 'swr';
 
-const fetcher = async url => fetch(url, {
-  method: 'GET',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  mode: 'cors',
-  cache: 'default'
-}).then(res => res.json())
+const fetcher = async (url: string): Promise<any> =>
+  fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    mode: 'cors',
+    cache: 'default',
+  }).then(res => res.json());
 
-const Home: React.FC = () => {
-  const [session, loading] = useSession()
-  
+const Home: React.FC = (): JSX.Element => {
+  const [session, loading] = useSession();
+
   if (loading) {
-    return <p>Loading map...</p>
+    return <p>Loading map...</p>;
   }
 
-  const { data, error } = useSWR('/api/cities', fetcher)
+  const { data, error } = useSWR('/api/cities', fetcher);
 
   if (error) return <div>An error has occured.</div>;
-  if (!data) return <div>Loading...</div>
-
+  if (!data) return <div>Loading...</div>;
 
   return (
-    <Box className={styles.container}>
+    <Box display="flex">
       <>
-      {session ? (
-        <>
-          <Head>
-            <title>Wander Tracker</title>
-            <link rel="icon" href="/favicon.ico" />
-          </Head>
+        {session ? (
+          <>
+            <Head>
+              <title>Wander Tracker</title>
+              <link href="/favicon.ico" rel="icon" />
+            </Head>
 
-          <main className={styles.main}>
-            <Sidebar cities={data} />
-            <Map />
-          </main>
-        </>
-      ) : (
-        <>
-          <p>Please sign in to access your map.</p>
-          <button onClick={signIn}>Sign in</button>
-        </>
-      )}
+            <Box alignItems="center" display="flex" height="100vh" width="100%">
+              <Sidebar cities={data} />
+              <Map />
+            </Box>
+          </>
+        ) : (
+          <>
+            <p>Please sign in to access your map.</p>
+            <button onClick={signIn}>Sign in</button>
+          </>
+        )}
       </>
     </Box>
-  )
-}
+  );
+};
 
 export default Home;
