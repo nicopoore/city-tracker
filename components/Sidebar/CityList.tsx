@@ -43,7 +43,10 @@ class CityList extends Component<
   }
 
   nestDatabase = (flat: City[]): NestedCities => {
-    return flat.reduce(
+    /* Takes flat array from database and returns a nested (country -> city) and sorted array of objects */
+
+    // Nests array
+    const nested = flat.reduce(
       (nested: { [name: string]: { name: string; place_id: string }[] }, city: City) => {
         !nested[city['country']] && (nested[city['country']] = []); // Creates country array if it doesn't already exist
 
@@ -52,6 +55,14 @@ class CityList extends Component<
       },
       {}
     );
+
+    // Sorts and returns array
+    return Object.keys(nested)
+      .sort()
+      .reduce((sorted, key) => {
+        sorted[key] = nested[key];
+        return sorted;
+      }, {});
   };
 
   renderCategory = (category: Category, classes): JSX.Element => {
@@ -97,7 +108,10 @@ class CityList extends Component<
 
         <Collapse component="li" in={this.state[country]}>
           <List className={classes.cityNested}>
-            {this.renderCities(category_id, countries[country])}
+            {this.renderCities(
+              category_id,
+              countries[country].sort((a, b) => (a.name > b.name ? 1 : -1))
+            )}
           </List>
         </Collapse>
       </>
