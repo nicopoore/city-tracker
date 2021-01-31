@@ -15,6 +15,7 @@ const Sidebar: React.FC<{ cities: fullCitiesObject }> = (props): JSX.Element => 
     height="96%"
     m={1}
     margin="0 1rem"
+    style={{ overflowY: 'scroll' }}
     width={200}
   >
     <SidebarNav cities={props.cities} />

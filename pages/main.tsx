@@ -38,7 +38,7 @@ const Home: React.FC = (): JSX.Element => {
 
             <Box alignItems="center" display="flex" height="100vh" width="100%">
               <Sidebar cities={data} />
-              <Map />
+              <Map cities={data} />
             </Box>
           </>
         ) : (
