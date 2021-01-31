@@ -1,5 +1,4 @@
-import mongoose from 'mongoose';
-import { CityRecord, CategoryRecord, fullCitiesObject } from '../components/types'
+import { CategoryRecord, fullCitiesObject } from '../components/types'
 import { ObjectId, Db } from 'mongodb'
 
 export const getUserCities = async (db: Db, userId: ObjectId): Promise<fullCitiesObject> => {
@@ -26,7 +25,7 @@ export const getUserCities = async (db: Db, userId: ObjectId): Promise<fullCitie
   return { categories: categories, cities: cities }
 }
 
-export const addNewCategory = async (db: Db, userId: ObjectId, name: string, color: string) => {
+export const addNewCategory = async (db: Db, userId: ObjectId, name: string, color: string): Promise<{}> => {
   /* Create new empty category */
 
   const category = await db
@@ -43,7 +42,7 @@ export const addNewCategory = async (db: Db, userId: ObjectId, name: string, col
   return category
 }
 
-export const handleNewUser = async (db: Db, userId: ObjectId) => {
+export const handleNewUser = async (db: Db, userId: ObjectId): Promise<{}> => {
   /* Create default categories for given userId */
 
   const defaultCategories = [
@@ -61,7 +60,7 @@ export const handleNewUser = async (db: Db, userId: ObjectId) => {
   return newUserCategories
 }
 
-export const createCity = async (db: Db, place_id: string, name: string, country: string, coordinates: number[]) => {
+export const createCity = async (db: Db, place_id: string, name: string, country: string, coordinates: number[]): Promise<{}> => {
   /* Check database for existing city document by place_id, if it doesn't exist create it. */
 
   const city = await db
@@ -84,7 +83,7 @@ export const createCity = async (db: Db, place_id: string, name: string, country
   return city
 }
 
-export const addCityToCategory = async (db: Db, place_id: string, category_id: ObjectId): Promise<any> => {
+export const addCityToCategory = async (db: Db, place_id: string, category_id: ObjectId): Promise<{}> => {
   /* Check category for city, if the city isn't in the category's cities array, add it */
 
   const category = await db
@@ -94,7 +93,7 @@ export const addCityToCategory = async (db: Db, place_id: string, category_id: O
   return category
 }
 
-export const removeCityFromCategory = async (db: Db, place_id: string, category_id: ObjectId): Promise<any> => {
+export const removeCityFromCategory = async (db: Db, place_id: string, category_id: ObjectId): Promise<{}> => {
   /* Remove city (place_id) from given category('s cities array) */
 
   const category = await db

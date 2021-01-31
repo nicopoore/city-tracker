@@ -30,8 +30,8 @@ class SidebarNav extends Component<{ cities: fullCitiesObject }, SidebarNavState
 
   render(): JSX.Element {
     return (
-      <Box>
-        <Box>
+      <>
+        <Box display="flex" justifyContent="space-evenly" width="100%">
           <Button color="primary" variant="contained" onClick={this.openAddCity}>
             Add city
           </Button>
@@ -44,7 +44,7 @@ class SidebarNav extends Component<{ cities: fullCitiesObject }, SidebarNavState
           closeAddCity={this.closeAddCity}
           open={this.state.addCityDialogOpen}
         />
-      </Box>
+      </>
     );
   }
 }

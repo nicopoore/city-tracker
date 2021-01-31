@@ -14,8 +14,29 @@ import { City, NestedCities } from '../types';
 import { Category, fullCitiesObject } from '../types';
 import axios from 'axios';
 import { ObjectId } from 'mongodb';
+import { withStyles } from '@material-ui/core/styles';
 
-class CityList extends Component<{ cities: fullCitiesObject }, { [name: string]: any }> {
+const styles = {
+  categoryNested: {
+    '& span': {
+      fontWeight: '700',
+    },
+  },
+  countryNested: {
+    paddingLeft: 20,
+  },
+  cityNested: {
+    paddingLeft: 20,
+    '& span': {
+      fontSize: '.9rem',
+    },
+  },
+};
+
+class CityList extends Component<
+  { cities: fullCitiesObject; classes: any },
+  { [name: string]: any }
+> {
   constructor(props) {
     super(props);
     this.state = {};
@@ -33,20 +54,20 @@ class CityList extends Component<{ cities: fullCitiesObject }, { [name: string]:
     );
   };
 
-  renderCategory = (category: Category): JSX.Element => {
+  renderCategory = (category: Category, classes): JSX.Element => {
     const filteredCities = this.props.cities.cities.filter(city =>
       category.cities.includes(city.place_id)
     );
     const nestedArr = this.nestDatabase(filteredCities);
 
     return (
-      <Box>
+      <>
         <ListItem key={category.name}>
           <ListItemIcon>
-            <Room style={{ color: category.color }} />
+            <Room className={classes.categoryIcon} style={{ color: category.color }} />
           </ListItemIcon>
           <ListItemText primary={category.name} />
-          <ListItemSecondaryAction onClick={this.handleItemClick.bind(this, category.name)}>
+          <ListItemSecondaryAction onClick={this.handleExpandCollapse.bind(this, category.name)}>
             <IconButton aria-label="expand/collapse" edge="end">
               {this.state[category.name] ? <ExpandLess /> : <ExpandMore />}
             </IconButton>
@@ -54,22 +75,20 @@ class CityList extends Component<{ cities: fullCitiesObject }, { [name: string]:
         </ListItem>
 
         <Collapse component="li" in={this.state[category.name]}>
-          <List>{this.renderCountries(category._id, nestedArr)}</List>
+          <List className={classes.countryNested}>
+            {this.renderCountries(category._id, nestedArr, classes)}
+          </List>
         </Collapse>
-      </Box>
+      </>
     );
   };
 
-  handleItemClick = (e: string | number): void => {
-    this.setState({ [e]: !this.state[e] });
-  };
-
-  renderCountries = (category_id: ObjectId, countries: NestedCities): JSX.Element[] => {
+  renderCountries = (category_id: ObjectId, countries: NestedCities, classes): JSX.Element[] => {
     return Object.keys(countries).map(country => (
-      <Box key={country}>
-        <ListItem>
+      <>
+        <ListItem key={country}>
           <ListItemText primary={country} />
-          <ListItemSecondaryAction onClick={this.handleItemClick.bind(this, country)}>
+          <ListItemSecondaryAction onClick={this.handleExpandCollapse.bind(this, country)}>
             <IconButton aria-label="expand/collapse" edge="end">
               {this.state[country] ? <ExpandLess /> : <ExpandMore />}
             </IconButton>
@@ -77,9 +96,11 @@ class CityList extends Component<{ cities: fullCitiesObject }, { [name: string]:
         </ListItem>
 
         <Collapse component="li" in={this.state[country]}>
-          <List>{this.renderCities(category_id, countries[country])}</List>
+          <List className={classes.cityNested}>
+            {this.renderCities(category_id, countries[country])}
+          </List>
         </Collapse>
-      </Box>
+      </>
     ));
   };
 
@@ -91,7 +112,7 @@ class CityList extends Component<{ cities: fullCitiesObject }, { [name: string]:
       <ListItem key={city['name']}>
         <ListItemText primary={city['name']} />
         <ListItemSecondaryAction
-          onClick={this.handleRemove.bind(this, { ...city, category_id: category_id })}
+          onClick={this.handleRemoveCity.bind(this, { ...city, category_id: category_id })}
         >
           <IconButton aria-label="delete" edge="end">
             <Delete />
@@ -101,7 +122,11 @@ class CityList extends Component<{ cities: fullCitiesObject }, { [name: string]:
     ));
   };
 
-  handleRemove = async (e: { place_id: string; category_id: string }): Promise<void> => {
+  handleExpandCollapse = (e: string | number): void => {
+    this.setState({ [e]: !this.state[e] });
+  };
+
+  handleRemoveCity = async (e: { place_id: string; category_id: string }): Promise<void> => {
     const postData = {
       place_id: e.place_id,
       category_id: e.category_id,
@@ -111,15 +136,16 @@ class CityList extends Component<{ cities: fullCitiesObject }, { [name: string]:
   };
 
   render(): JSX.Element {
+    const { classes } = this.props;
     const renderedCategories = this.props.cities.categories.map(category =>
-      this.renderCategory(category)
+      this.renderCategory(category, classes)
     );
     return (
-      <Box>
-        <List>{renderedCategories}</List>
+      <Box width="90%">
+        <List className={classes.categoryNested}>{renderedCategories}</List>
       </Box>
     );
   }
 }
 
-export default CityList;
+export default withStyles(styles)(CityList);

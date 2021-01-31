@@ -34,7 +34,3 @@ next.config.js
 
 # vercel
 .vercel
-
-/redux
-_app.jsx
-expressions.txt

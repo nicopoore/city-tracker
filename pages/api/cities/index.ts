@@ -19,7 +19,7 @@ const formatRawGoogle = (rawData: AxiosResponse<any>, place_id: string): City =>
   }
 }
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default async (req: NextApiRequest, res: NextApiResponse): Promise<null> => {
 
   // Get session, userID and connect to DB
   const session = await getSession({ req })
@@ -60,8 +60,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const dbCity = await createCity(db, place_id, name, country, coordinates)
         const dbCategory = await addCityToCategory(db, place_id, newCategory)
 
-        if (dbCity && dbCategory) return res.status(200).end()
-        return res.send('Error adding city')
+        if (dbCity && dbCategory) {
+          res.status(200).end()
+          return null
+        }
+        res.send('Error adding city')
+        return null
 
       } catch (err) {
         console.log('index.ts error: ', err)

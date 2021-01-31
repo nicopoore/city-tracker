@@ -1,11 +1,7 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
-
 import { fullCitiesObject } from '../types';
 import { SidebarNav, CityList } from '../';
-import withSession from '../sessionWrapper';
-
-const CityListWithSession = withSession(CityList);
 
 const Sidebar: React.FC<{ cities: fullCitiesObject }> = (props): JSX.Element => (
   <Box
@@ -22,7 +18,7 @@ const Sidebar: React.FC<{ cities: fullCitiesObject }> = (props): JSX.Element => 
     width={200}
   >
     <SidebarNav cities={props.cities} />
-    <CityListWithSession cities={props.cities} />
+    <CityList cities={props.cities} />
   </Box>
 );
 

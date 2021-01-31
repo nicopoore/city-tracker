@@ -21,7 +21,7 @@ interface DummyObject {
 
 const options = {
   callbacks: {
-    jwt: async (token: DummyObject, user: DummyObject, account: DummyObject, profile: DummyObject, isNewUser: DummyObject): Promise<any> => {
+    jwt: async (token: DummyObject, user: DummyObject/*, account: DummyObject, profile: DummyObject, isNewUser: DummyObject*/): Promise<any> => {
       if (user) {
         token.uid = user.id;
       }
@@ -46,4 +46,5 @@ const options = {
   debug: true,
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export default (req: NextApiRequest, res: NextApiResponse) => NextAuth(req, res, options)
