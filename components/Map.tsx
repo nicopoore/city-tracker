@@ -1,14 +1,18 @@
-import { Box } from '@material-ui/core';
+import { Box, Tooltip } from '@material-ui/core';
 import React, { Component } from 'react';
 import { ComposableMap, Geographies, Geography, Marker, ZoomableGroup } from 'react-simple-maps';
-import { CategoryRecord, fullCitiesObject } from './types';
+import { CategoryRecord, fullCitiesObject, mapState } from './types';
 
 const geoUrl =
   'https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json';
 
-class Map extends Component<{ cities: fullCitiesObject }, {}> {
+class Map extends Component<{ cities: fullCitiesObject }, mapState> {
   constructor(props: { cities: fullCitiesObject } | Readonly<{ cities: fullCitiesObject }>) {
     super(props);
+    this.state = {
+      coordinates: [0, 40],
+      zoom: 1.5,
+    };
   }
 
   renderMarkers = (category: CategoryRecord): JSX.Element[] => {
@@ -16,11 +20,19 @@ class Map extends Component<{ cities: fullCitiesObject }, {}> {
       category.cities.includes(city.place_id)
     );
 
-    return filteredCities.map(({ name, coordinates }) => (
+    let size = (1.5 + this.state.zoom / 10) / this.state.zoom;
+
+    return filteredCities.map(({ name, country, coordinates }) => (
       <Marker key={name} coordinates={[coordinates[1], coordinates[0]]}>
-        <circle fill={category.color} r={1} stroke="#fff" strokeWidth={0.5} />
+        <Tooltip arrow aria-label={name} title={`${name}, ${country}`}>
+          <circle fill={category.color} r={size} stroke="#fff" strokeWidth={size / 2} />
+        </Tooltip>
       </Marker>
     ));
+  };
+
+  handleMoveEnd = (position: mapState): void => {
+    this.setState({ coordinates: position.coordinates, zoom: position.zoom });
   };
 
   render(): JSX.Element {
@@ -41,12 +53,15 @@ class Map extends Component<{ cities: fullCitiesObject }, {}> {
           width={600}
         >
           <ZoomableGroup
-            center={[0, 40]}
+            center={this.state.coordinates}
+            maxZoom={16}
             translateExtent={[
               [100, 0],
               [500, 350],
             ]}
-            zoom={1.5}
+            zoom={this.state.zoom}
+            onMoveEnd={this.handleMoveEnd}
+            onMoveStart={this.handleMoveEnd}
           >
             <Geographies geography={geoUrl}>
               {({ geographies }) =>
@@ -56,7 +71,7 @@ class Map extends Component<{ cities: fullCitiesObject }, {}> {
                     fill="#EAEAEC"
                     geography={geo}
                     stroke="#D6D6DA"
-                    strokeWidth={0.3}
+                    strokeWidth={0.1}
                   />
                 ))
               }

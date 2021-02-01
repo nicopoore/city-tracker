@@ -39,3 +39,8 @@ export interface fullCitiesObject {
 export interface NestedCities {
   [name: string]: { name: string, place_id: string }[]
 }
+
+export interface mapState {
+  coordinates: [number, number],
+  zoom: number
+}

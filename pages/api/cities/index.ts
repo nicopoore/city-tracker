@@ -11,9 +11,12 @@ const formatRawGoogle = (rawData: AxiosResponse<any>, place_id: string): City =>
   const parts = rawData["data"].result.address_components
   const coor = rawData["data"].result.geometry.location
 
+  let country = parts.find((part: { long_name: string, short_name: string, types: string[] }[]) => part["types"].indexOf("country") >= 0) // Get country object from response
+  country = !country ? parts[0].long_name : country.long_name // Use city name as country if no country is present
+
   return {
     name: parts[0].long_name,
-    country: parts[parts.length - 1].long_name,
+    country: country,
     coordinates: [coor.lat, coor.lng],
     place_id: place_id
   }
