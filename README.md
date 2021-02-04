@@ -5,7 +5,7 @@ Wander Tracker is a Next.js website built with MERN to keep track of your favour
 ## Demos
 
 Adding cities (animated)
-![Adding cities (animated)](https://imgur.com/U4T1tyN.gif)
+![Adding cities (animated)](https://imgur.com/U4T1tyN.jpg)
 Full map
 ![Full map](https://imgur.com/ijxezk7.jpg)
 Add city
