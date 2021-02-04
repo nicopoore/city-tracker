@@ -13,4 +13,24 @@ a {
 
 * {
   box-sizing: border-box;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+  display: none;
+}
+::-webkit-scrollbar-thumb {
+  background: #dbdbdb;
+  border-radius: 15px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #adadad;
+}
+::-webkit-scrollbar-track {
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: inset 7px 10px 12px #f0f0f0;
 }

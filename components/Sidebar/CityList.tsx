@@ -8,6 +8,8 @@ import {
   ListItemText,
   ListItemSecondaryAction,
   IconButton,
+  Typography,
+  Tooltip,
 } from '@material-ui/core';
 import { ExpandLess, ExpandMore, Room, Delete } from '@material-ui/icons';
 import { City, NestedCities } from '../types';
@@ -17,11 +19,7 @@ import { ObjectId } from 'mongodb';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = {
-  categoryNested: {
-    '& span': {
-      fontWeight: '700',
-    },
-  },
+  categoryNested: {},
   countryNested: {
     paddingLeft: 20,
   },
@@ -71,13 +69,22 @@ class CityList extends Component<
     );
     const nestedArr = this.nestDatabase(filteredCities);
 
+    const count = `${category['cities'].length} ${
+      category['cities'].length === 1 ? 'city' : 'cities'
+    }, ${Object.keys(nestedArr).length} ${
+      Object.keys(nestedArr).length === 1 ? 'country' : 'countries'
+    }`;
+
     return (
       <>
         <ListItem key={category.name}>
           <ListItemIcon>
             <Room className={classes.categoryIcon} style={{ color: category.color }} />
           </ListItemIcon>
-          <ListItemText primary={category.name} />
+          <ListItemText
+            primary={<Typography style={{ fontWeight: 600 }}>{category.name}</Typography>}
+            secondary={count}
+          />
           <ListItemSecondaryAction onClick={this.handleExpandCollapse.bind(this, category.name)}>
             <IconButton aria-label="expand/collapse" edge="end">
               {this.state[category.name] ? <ExpandLess /> : <ExpandMore />}
@@ -85,7 +92,7 @@ class CityList extends Component<
           </ListItemSecondaryAction>
         </ListItem>
 
-        <Collapse component="li" in={this.state[category.name]}>
+        <Collapse key={`${category.name} li`} component="li" in={this.state[category.name]}>
           <List className={classes.countryNested}>
             {this.renderCountries(category._id, nestedArr, classes)}
           </List>
@@ -106,7 +113,7 @@ class CityList extends Component<
           </ListItemSecondaryAction>
         </ListItem>
 
-        <Collapse component="li" in={this.state[country]}>
+        <Collapse key={`${country} li`} component="li" in={this.state[country]}>
           <List className={classes.cityNested}>
             {this.renderCities(
               category_id,
@@ -128,9 +135,11 @@ class CityList extends Component<
         <ListItemSecondaryAction
           onClick={this.handleRemoveCity.bind(this, { ...city, category_id: category_id })}
         >
-          <IconButton aria-label="delete" edge="end">
-            <Delete />
-          </IconButton>
+          <Tooltip aria-label="Delete city" title="Delete city">
+            <IconButton aria-label="delete" edge="end">
+              <Delete />
+            </IconButton>
+          </Tooltip>
         </ListItemSecondaryAction>
       </ListItem>
     ));
@@ -155,7 +164,7 @@ class CityList extends Component<
       this.renderCategory(category, classes)
     );
     return (
-      <Box width="90%">
+      <Box mb={8} width="90%">
         <List className={classes.categoryNested}>{renderedCategories}</List>
       </Box>
     );

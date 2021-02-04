@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Box, Button } from '@material-ui/core';
+import { Box, Fab, Tooltip } from '@material-ui/core';
 import AddCity from './AddCity';
-import { signOut } from 'next-auth/client';
 import { fullCitiesObject } from '../types';
+import { Add } from '@material-ui/icons';
 
 interface SidebarNavState {
   addCityDialogOpen: boolean;
@@ -31,13 +31,12 @@ class SidebarNav extends Component<{ cities: fullCitiesObject }, SidebarNavState
   render(): JSX.Element {
     return (
       <>
-        <Box display="flex" justifyContent="space-evenly" width="100%">
-          <Button color="primary" variant="contained" onClick={this.openAddCity}>
-            Add city
-          </Button>
-          <Button color="primary" variant="contained" onClick={signOut}>
-            Sign out
-          </Button>
+        <Box bottom={110} left={250} position="absolute" zIndex="1000">
+          <Tooltip aria-label="Add city" placement="top" title="Add city">
+            <Fab color="primary" onClick={this.openAddCity}>
+              <Add />
+            </Fab>
+          </Tooltip>
         </Box>
         <AddCity
           cities={this.props.cities}

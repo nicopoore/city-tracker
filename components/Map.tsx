@@ -61,7 +61,6 @@ class Map extends Component<{ cities: fullCitiesObject }, mapState> {
             ]}
             zoom={this.state.zoom}
             onMoveEnd={this.handleMoveEnd}
-            onMoveStart={this.handleMoveEnd}
           >
             <Geographies geography={geoUrl}>
               {({ geographies }) =>

@@ -85,6 +85,17 @@ class AddCity extends Component<AddCityProps, AddCityState> {
     });
   };
 
+  handleClose = (): void => {
+    this.props.closeAddCity();
+    setTimeout(() => {
+      this.setState({
+        place_id: '',
+        category_name: '',
+        category_id: '',
+      });
+    }, 500);
+  };
+
   render(): JSX.Element {
     const autocompleteStyles = {
       container: (provided: {}): {} => ({
@@ -99,7 +110,7 @@ class AddCity extends Component<AddCityProps, AddCityState> {
         aria-labelledby="add-city-title"
         open={this.props.open}
         scroll={'body'}
-        onClose={this.props.closeAddCity}
+        onClose={this.handleClose}
       >
         <DialogTitle id="add-city-title">
           {this.state.category_name === ''
