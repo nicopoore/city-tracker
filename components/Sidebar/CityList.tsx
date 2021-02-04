@@ -17,6 +17,7 @@ import { Category, fullCitiesObject } from '../types';
 import axios from 'axios';
 import { ObjectId } from 'mongodb';
 import { withStyles } from '@material-ui/core/styles';
+import { mutate } from 'swr';
 
 const styles = {
   categoryNested: {},
@@ -156,6 +157,7 @@ class CityList extends Component<
     };
 
     await axios.post('/api/cities/remove', postData);
+    mutate('/api/cities');
   };
 
   render(): JSX.Element {

@@ -14,6 +14,7 @@ import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import { Room } from '@material-ui/icons';
 import { fullCitiesObject } from '../types';
 import axios from 'axios';
+import { mutate } from 'swr';
 
 interface AddCityProps {
   open: boolean;
@@ -69,6 +70,7 @@ class AddCity extends Component<AddCityProps, AddCityState> {
       category_id: '',
     });
     this.props.closeAddCity();
+    mutate('/api/cities');
   };
 
   handleSelectCategory = (category_name: string, category_id: string): void => {

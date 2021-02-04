@@ -10,8 +10,8 @@ class Map extends Component<{ cities: fullCitiesObject }, mapState> {
   constructor(props: { cities: fullCitiesObject } | Readonly<{ cities: fullCitiesObject }>) {
     super(props);
     this.state = {
-      coordinates: [0, 40],
-      zoom: 1.5,
+      coordinates: window.innerWidth >= 1000 ? [0, 40] : [0, 0],
+      zoom: window.innerWidth >= 1000 ? 1.5 : 1.9,
     };
   }
 
@@ -36,29 +36,55 @@ class Map extends Component<{ cities: fullCitiesObject }, mapState> {
   };
 
   render(): JSX.Element {
+    const fullscreenValues = {
+      height: 349,
+      scale: 60,
+      width: 600,
+      minZoom: 1,
+      maxZoom: 16,
+      translateExtent: [
+        [100, 0],
+        [500, 350],
+      ],
+      boxMargin: 2,
+      boxBorderRadius: '.5rem',
+      boxHeight: '96%',
+    };
+    const xsValues = {
+      height: 750,
+      scale: 60,
+      width: 300,
+      minZoom: 1.6,
+      maxZoom: 16,
+      translateExtent: [
+        [-39, 180],
+        [340, -195.8 * (window.innerHeight / window.innerWidth) + 982.93], // Fix map bounds for different screen resolutions
+      ],
+      boxMargin: false,
+      boxBorderRadius: '0',
+      boxHeight: '100%',
+    };
+    const mapValues = window.innerWidth >= 992 ? fullscreenValues : xsValues;
     return (
       <Box
         bgcolor="#A2C6D1"
-        borderRadius=".5rem"
+        borderRadius={mapValues.boxBorderRadius}
         flex="5 1"
-        height="96%"
-        m={1}
-        mr="1rem"
+        height={mapValues.boxHeight}
+        mx={mapValues.boxMargin}
         overflow="hidden"
       >
         <ComposableMap
-          height={349}
+          height={mapValues.height}
           projection="geoMercator"
-          projectionConfig={{ scale: 60 }}
-          width={600}
+          projectionConfig={{ scale: mapValues.scale }}
+          width={mapValues.width}
         >
           <ZoomableGroup
             center={this.state.coordinates}
-            maxZoom={16}
-            translateExtent={[
-              [100, 0],
-              [500, 350],
-            ]}
+            maxZoom={mapValues.maxZoom}
+            minZoom={mapValues.minZoom}
+            translateExtent={mapValues.translateExtent}
             zoom={this.state.zoom}
             onMoveEnd={this.handleMoveEnd}
           >
