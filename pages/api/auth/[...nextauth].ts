@@ -1,5 +1,5 @@
 import NextAuth from 'next-auth';
-import Providers from 'next-auth/Providers';
+import Providers from 'next-auth/providers';
 import { NextApiRequest, NextApiResponse } from 'next'
 
 interface Session {
