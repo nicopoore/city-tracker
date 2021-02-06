@@ -153,7 +153,7 @@ class AddCity extends Component<AddCityProps, AddCityState> {
                 onChange: this.handleCityAdded,
                 styles: autocompleteStyles,
               }}
-              onLoadFailed={err => console.error('Could not inject Google script', err)}
+              onLoadFailed={err => console.error(err)}
             />
             <DialogActions>
               <Button color="secondary" onClick={this.handleDeselectCategory}>

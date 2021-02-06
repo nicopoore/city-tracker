@@ -32,10 +32,11 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> 
   switch(req.method) {
     case 'GET':
       // Get user's cities and categories
-      const citiesObject = await getUserCities(db, reqId)
+      let citiesObject = await getUserCities(db, reqId)
 
       if (citiesObject.categories.length === 0) {
-        handleNewUser(db, reqId)
+        await handleNewUser(db, reqId)
+        citiesObject = await getUserCities(db, reqId)
       }
 
       res.json(citiesObject)
