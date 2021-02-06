@@ -1,5 +1,5 @@
 import { signIn, signOut, useSession } from 'next-auth/client';
-import { Link } from '@material-ui/core';
+import { Button, Box, Typography } from '@material-ui/core';
 
 const Home: React.FC = (): JSX.Element => {
   const [session, loading] = useSession();
@@ -9,25 +9,24 @@ const Home: React.FC = (): JSX.Element => {
   }
 
   return (
-    <>
-      {!session && (
-        <>
-          Not signed in <br />
-          <button onClick={signIn}>Sign in</button>
-        </>
+    <Box
+      alignItems="center"
+      display="flex"
+      flexDirection="column"
+      height="100vh"
+      justifyContent="center"
+    >
+      <Typography>{session ? `Signed in as ${session.user.email}` : 'Not signed in'}</Typography>
+      {session ? (
+        <Button color="secondary" onClick={signOut}>
+          Sign out
+        </Button>
+      ) : (
+        <Button color="primary" onClick={signIn}>
+          Sign in
+        </Button>
       )}
-      {session && (
-        <>
-          Signed in as {session.user.email} <br />
-          <button onClick={signOut}>Sign out</button>
-        </>
-      )}
-      <div>
-        <Link href="/private">
-          <a>Private page</a>
-        </Link>
-      </div>
-    </>
+    </Box>
   );
 };
 

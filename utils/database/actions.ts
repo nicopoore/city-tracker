@@ -1,4 +1,4 @@
-import { CategoryRecord, fullCitiesObject } from '../components/types'
+import { CategoryRecord, fullCitiesObject } from '../../components/types'
 import { ObjectId, Db } from 'mongodb'
 
 export const getUserCities = async (db: Db, userId: ObjectId): Promise<fullCitiesObject> => {

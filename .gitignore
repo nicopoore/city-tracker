@@ -34,3 +34,4 @@ next.config.js
 
 # vercel
 .vercel
+/utils/validation

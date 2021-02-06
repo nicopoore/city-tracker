@@ -21,13 +21,13 @@ interface DummyObject {
 
 const options = {
   callbacks: {
-    jwt: async (token: DummyObject, user: DummyObject/*, account: DummyObject, profile: DummyObject, isNewUser: DummyObject*/): Promise<any> => {
+    jwt: async (token: DummyObject, user: DummyObject): Promise<DummyObject> => {
       if (user) {
         token.uid = user.id;
       }
       return Promise.resolve(token)
     },
-    session: async (session: Session, user: User): Promise<any> => {
+    session: async (session: Session, user: User): Promise<Session> => {
       session.user.uid = user.uid
       return Promise.resolve(session)
     }
@@ -36,6 +36,11 @@ const options = {
     Providers.Google({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET
+    }),
+    Providers.Auth0({
+      clientId: process.env.AUTH0_CLIENT_ID,
+      clientSecret: process.env.AUTH0_CLIENT_SECRET,
+      domain: process.env.AUTH0_DOMAIN
     })
   ],
   database: process.env.MONGODB_URI,

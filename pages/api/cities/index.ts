@@ -3,8 +3,8 @@ import { getSession } from 'next-auth/client'
 import axios, { AxiosResponse } from "axios"
 import { ObjectId } from 'mongodb'
 
-import { connectToDatabase } from '../../../database/connect'
-import { handleNewUser, getUserCities, createCity, addCityToCategory } from '../../../database/actions'
+import { connectToDatabase } from '../../../utils/database/connect'
+import { handleNewUser, getUserCities, createCity, addCityToCategory } from '../../../utils/database/actions'
 import { City } from '../../../components/types'
 
 const formatRawGoogle = (rawData: AxiosResponse<any>, place_id: string): City => {
@@ -22,7 +22,7 @@ const formatRawGoogle = (rawData: AxiosResponse<any>, place_id: string): City =>
   }
 }
 
-export default async (req: NextApiRequest, res: NextApiResponse): Promise<null> => {
+export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
 
   // Get session, userID and connect to DB
   const session = await getSession({ req })
@@ -39,15 +39,16 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<null> 
       }
 
       res.json(citiesObject)
-      res.end()
-      break;
+      return res.end()
 
     case 'POST':
       // Create city and/or add it to a category
       
       const url = 'https://maps.googleapis.com/maps/api/place/details/json'
       const { place_id, category_id } = req.body
+      if (place_id.length > 200 || category_id.length > 200) return res.status(422).end()
       const newCategory = new ObjectId(category_id)
+
 
       // Get city info from Google
       try {
@@ -64,20 +65,16 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<null> 
         const dbCategory = await addCityToCategory(db, place_id, newCategory)
 
         if (dbCity && dbCategory) {
-          res.status(200).end()
-          return null
+          return res.status(200).end()
         }
-        res.send('Error adding city')
-        return null
+        return res.send('Error adding city')
 
       } catch (err) {
         console.log('index.ts error: ', err)
-        res.end()
+        return res.end()
       }
-      break;
 
     default:
-      res.status(405).end();
-      break;
+      return res.status(405).end();
   }
 }
