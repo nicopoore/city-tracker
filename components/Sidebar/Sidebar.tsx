@@ -34,21 +34,19 @@ const Sidebar: React.FC<{ cities: fullCitiesObject }> = (props): JSX.Element => 
           height="96%"
           id="sidebarBox"
           justifyContent="space-between"
-          minWidth={220}
           ml={2}
           mr={1}
           style={{ overflowY: 'scroll' }}
-          width={220}
+          width={200}
         >
           <Box
             alignItems="center"
             display="flex"
             flexDirection="column"
-            flexGrow={1}
             flexWrap="nowrap"
-            justifyContent="space-between"
             overflow="scroll"
           >
+            <SidebarNav cities={props.cities} />
             <CityList cities={props.cities} />
           </Box>
           <Box
@@ -58,9 +56,6 @@ const Sidebar: React.FC<{ cities: fullCitiesObject }> = (props): JSX.Element => 
             maxWidth="400px"
             width="100%"
           >
-            <Box position="relative" width="100%">
-              <SidebarNav cities={props.cities} />
-            </Box>
             <Profile />
           </Box>
         </Box>
