@@ -47,7 +47,7 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> 
       
       const url = 'https://maps.googleapis.com/maps/api/place/details/json'
       const { place_id, category_id } = req.body
-      if (place_id.length > 200 || category_id.length > 200 ) return res.status(400).end()
+      if (place_id.length > 200 || category_id.length > 200 || place_id.constructor.name !== 'String' || category_id.constructor.name !== 'String') return res.status(400).end()
       const newCategory = new ObjectId(category_id)
 
 

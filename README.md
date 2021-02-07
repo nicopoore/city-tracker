@@ -1,8 +1,10 @@
-# Wander Tracker
+# [Wander Tracker](https://city-tracker.vercel.app/main#)
 
 Wander Tracker is a Next.js website built with MERN to keep track of your favourite cities, as well as all those you've visited or want to visit.
 
 ## Demos
+
+#### [Live Demo](https://city-tracker.vercel.app/main#)
 
 #### Adding cities (animated)
 
