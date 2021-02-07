@@ -28,11 +28,15 @@ class SidebarNav extends Component<{ cities: fullCitiesObject }, SidebarNavState
     });
   };
 
+  calculatePosition = (): { bottom: number; left: number; right: number } => {
+    return { bottom: 1, left: 1, right: 1 };
+  };
+
   render(): JSX.Element {
     return (
       <>
         <Box bottom="0" position="absolute" right="0">
-          <Box alignSelf="flex-end" mb={2} mr={2}>
+          <Box alignSelf="flex-end" bgcolor="transparent" mb={2} mr={2}>
             <Tooltip aria-label="Add city" placement="top" title="Add city">
               <Fab color="primary" onClick={this.openAddCity}>
                 <Add />
