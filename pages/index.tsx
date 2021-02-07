@@ -1,11 +1,12 @@
 import { signIn, signOut, useSession } from 'next-auth/client';
-import { Button, Box, Typography } from '@material-ui/core';
+import { Button, Box, Typography, Link } from '@material-ui/core';
+import { Loading } from '../components';
 
 const Home: React.FC = (): JSX.Element => {
   const [session, loading] = useSession();
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <Loading currentState="Loading..." />;
   }
 
   return (
@@ -25,11 +26,17 @@ const Home: React.FC = (): JSX.Element => {
           <Button color="secondary" onClick={signOut}>
             Sign out
           </Button>
+          <Link color="textSecondary" href="/privacy">
+            Privacy Policy
+          </Link>
         </>
       ) : (
-        <Button color="primary" onClick={signIn}>
-          Sign in
-        </Button>
+        <>
+          <Button color="primary" onClick={signIn}>
+            Sign in
+          </Button>
+          <Link href="/privacy">Privacy Policy</Link>
+        </>
       )}
     </Box>
   );
