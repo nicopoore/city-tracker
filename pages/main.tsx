@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { Map, Sidebar } from '../components';
-import { Box } from '@material-ui/core';
+import { Box, CircularProgress } from '@material-ui/core';
 import { signIn, useSession, signOut } from 'next-auth/client';
 import useSWR from 'swr';
 
@@ -31,8 +31,14 @@ const Home: React.FC = (): JSX.Element => {
     );
   const { data, error } = useSWR('/api/cities', fetcher);
 
+  const loadingJSX = (
+    <Box alignItems="center" display="flex" height="100vh" width="100%">
+      <CircularProgress />
+    </Box>
+  );
+
   if (error) return <div>An error has occured.</div>;
-  if (!data) return <div>Loading cities...</div>;
+  if (!data) return loadingJSX;
 
   return (
     <Box display="flex">

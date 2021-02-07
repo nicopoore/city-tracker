@@ -68,6 +68,7 @@ I made this project to practice new technologies, to showcase what I could do, a
 - Exporting your map as an image
 - Showing/hiding categories in the map
 - Dark mode
+- Adding multiple cities in one submission
 
 ## Bugs
 

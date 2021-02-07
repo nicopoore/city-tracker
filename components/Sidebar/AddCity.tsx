@@ -146,7 +146,7 @@ class AddCity extends Component<AddCityProps, AddCityState> {
           <DialogContent style={{ overflowY: 'visible' }}>
             <DialogContentText>Search and select the city</DialogContentText>
             <GooglePlacesAutocomplete
-              apiKey={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_API}
+              apiKey="AIzaSyDNyn7yjtPhNmnTPCM79x3xjqIDgZvWVAE"
               autocompletionRequest={{ types: ['(cities)'] }} // Limit results to cities
               selectProps={{
                 placeholder: 'Search cities...',
