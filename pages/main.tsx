@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { Map, Sidebar } from '../components';
 import { Box, CircularProgress } from '@material-ui/core';
-import { signIn, useSession, signOut } from 'next-auth/client';
+import { signIn, useSession } from 'next-auth/client';
 import useSWR from 'swr';
 
 const fetcher = async (url: string): Promise<any> =>
@@ -25,8 +25,7 @@ const Home: React.FC = (): JSX.Element => {
     return (
       <>
         <p>Please sign in to access your map.</p>
-        <button onClick={signIn} />
-        <button onClick={signOut}>signout</button>
+        <button onClick={signIn}>Sign in</button>
       </>
     );
   const { data, error } = useSWR('/api/cities', fetcher);
@@ -37,7 +36,7 @@ const Home: React.FC = (): JSX.Element => {
     </Box>
   );
 
-  if (error) return <div>An error has occured.</div>;
+  if (error) return <div>Error fetching your cities.</div>;
   if (!data) return loadingJSX;
 
   return (
