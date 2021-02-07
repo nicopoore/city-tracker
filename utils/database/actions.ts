@@ -48,7 +48,7 @@ export const handleNewUser = async (db: Db, userId: ObjectId): Promise<{}> => {
   const defaultCategories = [
     { userId: userId, name: 'Visited', color: '#f00', cities: [] },
     { userId: userId, name: 'To visit', color: '#00f', cities: [] },
-    { userId: userId, name: 'Favorites', color: '#ff0', cities: [] },
+    { userId: userId, name: 'Favorites', color: '#FFDF00', cities: [] },
   ]
 
   let newUserCategories = await db
