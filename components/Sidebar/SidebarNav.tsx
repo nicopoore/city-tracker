@@ -31,18 +31,14 @@ class SidebarNav extends Component<{ cities: fullCitiesObject }, SidebarNavState
   render(): JSX.Element {
     return (
       <>
-        <Box
-          bottom={window.innerWidth >= 992 ? 110 : 20}
-          left={window.innerWidth >= 992 ? 250 : false}
-          position="absolute"
-          right={window.innerWidth >= 992 ? false : 20}
-          zIndex="1000"
-        >
-          <Tooltip aria-label="Add city" placement="top" title="Add city">
-            <Fab color="primary" onClick={this.openAddCity}>
-              <Add />
-            </Fab>
-          </Tooltip>
+        <Box bottom="0" position="absolute" right="0">
+          <Box alignSelf="flex-end" mb={2} mr={2}>
+            <Tooltip aria-label="Add city" placement="top" title="Add city">
+              <Fab color="primary" onClick={this.openAddCity}>
+                <Add />
+              </Fab>
+            </Tooltip>
+          </Box>
         </Box>
         <AddCity
           cities={this.props.cities}
