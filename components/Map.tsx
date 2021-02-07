@@ -1,7 +1,7 @@
 import { Box, Tooltip } from '@material-ui/core';
 import React, { Component } from 'react';
 import { ComposableMap, Geographies, Geography, Marker, ZoomableGroup } from 'react-simple-maps';
-import { CategoryRecord, fullCitiesObject, mapState } from './types';
+import { CategoryRecord, fullCitiesObject, mapState, mapValuesObject } from './types';
 
 const geoUrl =
   'https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json';
@@ -10,8 +10,8 @@ class Map extends Component<{ cities: fullCitiesObject }, mapState> {
   constructor(props: { cities: fullCitiesObject } | Readonly<{ cities: fullCitiesObject }>) {
     super(props);
     this.state = {
-      coordinates: window.innerWidth >= 1000 ? [0, 40] : [0, 0],
-      zoom: window.innerWidth >= 1000 ? 1.5 : 1.9,
+      coordinates: window.innerWidth >= 992 ? [0, 40] : [0, 0],
+      zoom: window.innerWidth >= 992 ? 1.5 : 1.9,
     };
   }
 
@@ -36,7 +36,8 @@ class Map extends Component<{ cities: fullCitiesObject }, mapState> {
   };
 
   render(): JSX.Element {
-    const fullscreenValues = {
+    const aspectRatio = window.innerHeight / window.innerWidth;
+    const widescreenValues = {
       height: 349,
       scale: 60,
       width: 600,
@@ -50,6 +51,20 @@ class Map extends Component<{ cities: fullCitiesObject }, mapState> {
       boxBorderRadius: '.5rem',
       boxHeight: '96%',
     };
+    const mdValues = {
+      height: 600,
+      scale: 60,
+      width: 600,
+      minZoom: 1.4,
+      maxZoom: 16,
+      translateExtent: [
+        [100, 100],
+        [500, 450],
+      ],
+      boxMargin: 2,
+      boxBorderRadius: '.5rem',
+      boxHeight: '96%',
+    };
     const xsValues = {
       height: 750,
       scale: 60,
@@ -58,13 +73,20 @@ class Map extends Component<{ cities: fullCitiesObject }, mapState> {
       maxZoom: 16,
       translateExtent: [
         [-39, 180],
-        [340, -195.8 * (window.innerHeight / window.innerWidth) + 982.93], // Fix map bounds for different screen resolutions
+        [340, -195.8 * aspectRatio + 982.93], // Fix map bounds for different screen resolutions
       ],
       boxMargin: false,
       boxBorderRadius: '0',
       boxHeight: '100%',
     };
-    const mapValues = window.innerWidth >= 992 ? fullscreenValues : xsValues;
+    let mapValues: mapValuesObject;
+    if (aspectRatio >= 1.5 && window.innerWidth >= 992) {
+      mapValues = widescreenValues;
+    } else if (aspectRatio < 1.5 && window.innerWidth >= 992) {
+      mapValues = mdValues;
+    } else {
+      mapValues = xsValues;
+    }
     return (
       <Box
         bgcolor="#A2C6D1"

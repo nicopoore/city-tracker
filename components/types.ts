@@ -44,3 +44,15 @@ export interface mapState {
   coordinates: [number, number],
   zoom: number
 }
+
+export interface mapValuesObject {
+  height: number,
+  scale: number,
+  width: number,
+  minZoom: number,
+  maxZoom: number,
+  translateExtent: number[][],
+  boxMargin: number | boolean,
+  boxBorderRadius: string,
+  boxHeight: string
+}
