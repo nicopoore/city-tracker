@@ -80,11 +80,17 @@ class Map extends Component<{ cities: fullCitiesObject }, mapState> {
       boxHeight: '100%',
     };
     let mapValues: mapValuesObject;
-    if (aspectRatio >= 1.5 && window.innerWidth >= 992) {
+    if (aspectRatio <= 0.65 && window.innerWidth >= 992) {
+      console.log(aspectRatio);
+      console.log('wide');
       mapValues = widescreenValues;
-    } else if (aspectRatio < 1.5 && window.innerWidth >= 992) {
+    } else if (aspectRatio > 0.65 && window.innerWidth >= 992) {
+      console.log(aspectRatio);
+      console.log('med');
       mapValues = mdValues;
     } else {
+      console.log(aspectRatio);
+      console.log('xs');
       mapValues = xsValues;
     }
     return (
