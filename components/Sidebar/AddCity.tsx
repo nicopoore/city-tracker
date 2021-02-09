@@ -36,10 +36,11 @@ class AddCity extends Component<AddCityProps, AddCityState> {
       category_name: '',
       category_id: '',
     };
-    this.handleCityAdded = this.handleCityAdded.bind(this);
+    this.handleCitySelected = this.handleCitySelected.bind(this);
     this.handleSelectCategory = this.handleSelectCategory.bind(this);
     this.handleDeselectCategory = this.handleDeselectCategory.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleClose = this.handleClose.bind(this);
   }
 
   componentDidMount = (): void => {
@@ -50,13 +51,13 @@ class AddCity extends Component<AddCityProps, AddCityState> {
     });
   };
 
-  handleCityAdded = async (e: { value: { place_id: string } }): Promise<void> => {
+  handleCitySelected = async (e: { value: { place_id: string } }): Promise<void> => {
     this.setState({
       place_id: e.value.place_id,
     });
   };
 
-  handleSubmit = async (): Promise<void> => {
+  handleSubmit = async (option?: boolean): Promise<void> => {
     const postData = {
       place_id: this.state.place_id,
       category_name: this.state.category_name,
@@ -65,12 +66,23 @@ class AddCity extends Component<AddCityProps, AddCityState> {
 
     await axios.post('/api/cities', postData);
 
-    this.setState({
-      place_id: '',
-      category_name: '',
-      category_id: '',
-    });
-    this.props.closeAddCity();
+    if (!option) {
+      this.setState({
+        place_id: '',
+        category_name: '',
+        category_id: '',
+      });
+      this.props.closeAddCity();
+    } else if (option) {
+      const currentCat = this.state.category_name;
+      this.setState({
+        place_id: '',
+        category_name: '',
+      });
+      this.setState({
+        category_name: currentCat,
+      });
+    }
     mutate('/api/cities');
   };
 
@@ -151,8 +163,9 @@ class AddCity extends Component<AddCityProps, AddCityState> {
               autocompletionRequest={{ types: ['(cities)'] }} // Limit results to cities
               selectProps={{
                 placeholder: 'Search cities...',
-                onChange: this.handleCityAdded,
+                onChange: this.handleCitySelected,
                 styles: autocompleteStyles,
+                autoFocus: true,
               }}
               onLoadFailed={err => console.error(err)}
             />
@@ -161,10 +174,17 @@ class AddCity extends Component<AddCityProps, AddCityState> {
                 Back
               </Button>
               <Button
+                color="primary"
+                disabled={this.state.place_id === ''}
+                onClick={() => this.handleSubmit(true)}
+              >
+                Submit & add another
+              </Button>
+              <Button
                 autoFocus
                 color="primary"
                 disabled={this.state.place_id === ''}
-                onClick={this.handleSubmit}
+                onClick={() => this.handleSubmit(false)}
               >
                 Submit
               </Button>
