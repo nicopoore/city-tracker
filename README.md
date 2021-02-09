@@ -64,7 +64,7 @@ I made this project to practice new technologies, to showcase what I could do, a
 
 ## Roadmap / Future features
 
-- Automatically removing a city from "To visit" when marked as "Visited"
+- ~~Automatically removing a city from "To visit" when marked as "Visited" and viceversa~~
 - Adding custom categories
 - Searching cities
 - Exporting your map as an image

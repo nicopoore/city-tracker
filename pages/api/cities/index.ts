@@ -46,8 +46,8 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> 
       // Create city and/or add it to a category
       
       const url = 'https://maps.googleapis.com/maps/api/place/details/json'
-      const { place_id, category_id } = req.body
-      if (place_id.length > 200 || category_id.length > 200 || place_id.constructor.name !== 'String' || category_id.constructor.name !== 'String') return res.status(400).end()
+      const { place_id, category_name, category_id } = req.body
+      if (place_id.length > 200 || category_name.length > 22 || category_id.length > 200 || place_id.constructor.name !== 'String' || category_name.constructor.name !== 'String' || category_id.constructor.name !== 'String') return res.status(400).end()
       const newCategory = new ObjectId(category_id)
 
 
@@ -63,7 +63,7 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> 
 
         // Create city, find category and add city to it
         const dbCity = await createCity(db, place_id, name, country, coordinates)
-        const dbCategory = await addCityToCategory(db, place_id, newCategory)
+        const dbCategory = await addCityToCategory(db, place_id, category_name, newCategory)
 
         if (dbCity && dbCategory) {
           return res.status(200).end()

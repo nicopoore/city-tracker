@@ -19,7 +19,7 @@ export const getUserCities = async (db: Db, userId: ObjectId): Promise<fullCitie
   // Use merged array to query full cities database
   const cities = await db
   .collection("cities")
-  .find({ place_id: { $in: allCitiesArray } }) // acá
+  .find({ place_id: { $in: allCitiesArray } })
   .toArray()
 
   return { categories: categories, cities: cities }
@@ -83,8 +83,17 @@ export const createCity = async (db: Db, place_id: string, name: string, country
   return city
 }
 
-export const addCityToCategory = async (db: Db, place_id: string, category_id: ObjectId): Promise<{}> => {
+export const addCityToCategory = async (db: Db, place_id: string, category_name: string, category_id: ObjectId): Promise<{}> => {
   /* Check category for city, if the city isn't in the category's cities array, add it */
+  /* Remove city from To visit if added to Visited and viceversa */
+
+  if (category_name === 'Visited') {
+    const toVisit = await db.collection("categories").updateOne({ name: "To visit"}, { $pull: { cities: place_id }} )
+    console.log(toVisit)
+  } else if (category_name === 'To visit') {
+    const visited = await db.collection("categories").updateOne({ name: "Visited"}, { $pull : { cities: place_id }})
+    console.log(visited)
+  }
 
   const category = await db
     .collection("categories")

@@ -59,6 +59,7 @@ class AddCity extends Component<AddCityProps, AddCityState> {
   handleSubmit = async (): Promise<void> => {
     const postData = {
       place_id: this.state.place_id,
+      category_name: this.state.category_name,
       category_id: this.state.category_id,
     };
 
