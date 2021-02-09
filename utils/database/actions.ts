@@ -88,11 +88,9 @@ export const addCityToCategory = async (db: Db, place_id: string, category_name:
   /* Remove city from To visit if added to Visited and viceversa */
 
   if (category_name === 'Visited') {
-    const toVisit = await db.collection("categories").updateOne({ name: "To visit"}, { $pull: { cities: place_id }} )
-    console.log(toVisit)
+    await db.collection("categories").updateOne({ name: "To visit"}, { $pull: { cities: place_id }} )
   } else if (category_name === 'To visit') {
-    const visited = await db.collection("categories").updateOne({ name: "Visited"}, { $pull : { cities: place_id }})
-    console.log(visited)
+    await db.collection("categories").updateOne({ name: "Visited"}, { $pull : { cities: place_id }})
   }
 
   const category = await db
