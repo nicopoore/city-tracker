@@ -125,6 +125,11 @@ class Map extends Component<{ cities: fullCitiesObject }, mapState> {
                     geography={geo}
                     stroke="#D6D6DA"
                     strokeWidth={0.1}
+                    style={{
+                      default: { outline: 'none' },
+                      hover: { outline: 'none' },
+                      pressed: { outline: 'none' },
+                    }}
                   />
                 ))
               }
