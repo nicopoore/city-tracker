@@ -1,18 +1,8 @@
 import React, { useState } from 'react';
-import { useSession, signOut } from 'next-auth/client';
-import {
-  Avatar,
-  IconButton,
-  Typography,
-  Grid,
-  Dialog,
-  DialogTitle,
-  DialogActions,
-  Button,
-  Tooltip,
-  Box,
-} from '@material-ui/core';
+import { useSession } from 'next-auth/client';
+import { Avatar, IconButton, Typography, Grid, Tooltip, Box } from '@material-ui/core';
 import { ExitToApp } from '@material-ui/icons';
+import { SignOut } from '../';
 
 const Profile: React.FC = (): JSX.Element => {
   const [signoutDialogIsOpen, setSignoutDialogIsOpen] = useState(false);
@@ -54,17 +44,7 @@ const Profile: React.FC = (): JSX.Element => {
           </Grid>
         </Grid>
       </Box>
-      <Dialog open={signoutDialogIsOpen} onClose={handleCloseSignout}>
-        <DialogTitle>Are you sure you want to sign out?</DialogTitle>
-        <DialogActions>
-          <Button color="primary" onClick={handleCloseSignout}>
-            No
-          </Button>
-          <Button color="secondary" onClick={signOut}>
-            Yes
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <SignOut handleClose={handleCloseSignout} open={signoutDialogIsOpen} />
     </>
   );
 };
