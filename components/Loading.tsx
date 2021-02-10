@@ -1,7 +1,9 @@
 import { Grid, CircularProgress, Typography } from '@material-ui/core';
 import React from 'react';
 
-const Loading: React.FC<{ currentState: string }> = (props): JSX.Element => {
+const Loading: React.FC<{ currentState: string; finishedStates?: string[] }> = (
+  props
+): JSX.Element => {
   return (
     <Grid
       container
@@ -15,7 +17,13 @@ const Loading: React.FC<{ currentState: string }> = (props): JSX.Element => {
         <CircularProgress />
       </Grid>
       <Grid item>
-        <Typography>{props.currentState}</Typography>
+        <Typography align="center">{props.currentState}</Typography>
+        {props.finishedStates &&
+          props.finishedStates.map(state => (
+            <Typography key={state} align="center" color="textSecondary">
+              {state}
+            </Typography>
+          ))}
       </Grid>
     </Grid>
   );

@@ -1,44 +1,67 @@
-import { signIn, signOut, useSession } from 'next-auth/client';
-import { Button, Box, Typography, Link } from '@material-ui/core';
-import { Loading } from '../components';
+import Head from 'next/head';
+import { Map, Sidebar, Loading, SignIn } from '../components';
+import { Box, Grid } from '@material-ui/core';
+import { useSession } from 'next-auth/client';
+import useSWR from 'swr';
+import React from 'react';
+
+const fetcher = async (url: string): Promise<any> =>
+  fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    mode: 'cors',
+    cache: 'default',
+  }).then(res => res.json());
 
 const Home: React.FC = (): JSX.Element => {
   const [session, loading] = useSession();
 
   if (loading) {
-    return <Loading currentState="Loading..." />;
+    return <Loading currentState="Fetching user data..." />;
   }
 
+  if (!session)
+    return (
+      <>
+        <Head>
+          <title>Wander Tracker</title>
+          <link href="/favicon.ico" rel="icon" />
+        </Head>
+        <SignIn />
+      </>
+    );
+  const { data, error } = useSWR('/api/cities', fetcher);
+
+  if (error)
+    return (
+      <Grid
+        container
+        alignItems="center"
+        direction="column"
+        justify="center"
+        style={{ minHeight: '100vh' }}
+      >
+        <Grid item>Error fetching your cities.</Grid>
+      </Grid>
+    );
+  if (!data)
+    return <Loading currentState="Loading cities..." finishedStates={['Fetched user data...']} />;
+
   return (
-    <Box
-      alignItems="center"
-      display="flex"
-      flexDirection="column"
-      height="100vh"
-      justifyContent="center"
-    >
-      <Typography>{session ? `Signed in as ${session.user.email}` : 'Not signed in'}</Typography>
-      {session ? (
-        <>
-          <Button color="primary" href="/main">
-            Go to your map
-          </Button>
-          <Button color="secondary" onClick={signOut}>
-            Sign out
-          </Button>
-          <Link color="textSecondary" href="/privacy">
-            Privacy Policy
-          </Link>
-        </>
-      ) : (
-        <>
-          <Button color="primary" onClick={signIn}>
-            Sign in
-          </Button>
-          <Link href="/privacy">Privacy Policy</Link>
-        </>
-      )}
-    </Box>
+    <>
+      <Head>
+        <title>Wander Tracker</title>
+        <link href="/favicon.ico" rel="icon" />
+      </Head>
+      <Box display="flex">
+        <Box alignItems="center" display="flex" height="100vh" width="100%">
+          <Sidebar cities={data} />
+          <Map cities={data} />
+        </Box>
+      </Box>
+    </>
   );
 };
 
