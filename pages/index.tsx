@@ -1,5 +1,4 @@
-import Head from 'next/head';
-import { Map, Sidebar, Loading, SignIn } from '../components';
+import { Map, Sidebar, Loading, SignIn, Meta } from '../components';
 import { Box, Grid } from '@material-ui/core';
 import { useSession } from 'next-auth/client';
 import useSWR from 'swr';
@@ -19,16 +18,18 @@ const Home: React.FC = (): JSX.Element => {
   const [session, loading] = useSession();
 
   if (loading) {
-    return <Loading currentState="Fetching user data..." />;
+    return (
+      <>
+        <Meta />
+        <Loading currentState="Fetching user data..." />
+      </>
+    );
   }
 
   if (!session)
     return (
       <>
-        <Head>
-          <title>Wander Tracker</title>
-          <link href="/favicon.ico" rel="icon" />
-        </Head>
+        <Meta />
         <SignIn />
       </>
     );
@@ -47,14 +48,16 @@ const Home: React.FC = (): JSX.Element => {
       </Grid>
     );
   if (!data)
-    return <Loading currentState="Loading cities..." finishedStates={['Fetched user data...']} />;
+    return (
+      <>
+        <Meta />
+        <Loading currentState="Loading cities..." finishedStates={['Fetched user data...']} />
+      </>
+    );
 
   return (
     <>
-      <Head>
-        <title>Wander Tracker</title>
-        <link href="/favicon.ico" rel="icon" />
-      </Head>
+      <Meta />
       <Box display="flex">
         <Box alignItems="center" display="flex" height="100vh" width="100%">
           <Sidebar cities={data} />
