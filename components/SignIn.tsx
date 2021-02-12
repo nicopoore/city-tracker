@@ -31,7 +31,7 @@ const SignIn: React.FC = (): JSX.Element => {
         style={{ minHeight: '90vh' }}
       >
         <Grid item>
-          <Card variant="outlined">
+          <Card style={{ padding: '1em' }} variant="outlined">
             <CardContent>
               <Typography align="center" variant="h4">
                 Wander Tracker
