@@ -4,7 +4,7 @@ import axios, { AxiosResponse } from "axios"
 import { ObjectId } from 'mongodb'
 
 import { connectToDatabase } from '../../../utils/database/connect'
-import { handleNewUser, getUserCities, createCity, addCityToCategory } from '../../../utils/database/actions'
+import { handleNewUser, getUserCities, createCity, addCityToCategory, getUserIdFromCategory } from '../../../utils/database/actions'
 import { City } from '../../../components/types'
 
 const formatRawGoogle = (rawData: AxiosResponse<any>, place_id: string): City => {
@@ -26,17 +26,17 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> 
 
   // Get session, userID and connect to DB
   const session = await getSession({ req })
-  const reqId = new ObjectId(session.user.uid)
+  const loggedUserId = new ObjectId(session.user.uid)
   const { db } = await connectToDatabase();
 
   switch(req.method) {
     case 'GET':
       // Get user's cities and categories
-      let citiesObject = await getUserCities(db, reqId)
+      let citiesObject = await getUserCities(db, loggedUserId)
 
       if (citiesObject.categories.length === 0) {
-        await handleNewUser(db, reqId)
-        citiesObject = await getUserCities(db, reqId)
+        await handleNewUser(db, loggedUserId)
+        citiesObject = await getUserCities(db, loggedUserId)
       }
 
       res.json(citiesObject)
@@ -50,6 +50,12 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> 
       if (place_id.length > 200 || category_name.length > 22 || category_id.length > 200 || place_id.constructor.name !== 'String' || category_name.constructor.name !== 'String' || category_id.constructor.name !== 'String') return res.status(400).end()
       const newCategory = new ObjectId(category_id)
 
+      // Check if logged in user is map owner
+
+      const userId = await getUserIdFromCategory(db, newCategory)
+      if (userId.toString() !== loggedUserId.toString()) {
+        return res.status(401).end()
+      }
 
       // Get city info from Google
       try {

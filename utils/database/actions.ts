@@ -109,3 +109,23 @@ export const removeCityFromCategory = async (db: Db, place_id: string, category_
   
   return category
 }
+
+export const getUserData = async (db: Db, userId: ObjectId): Promise<any> => {
+  /* Get user name and picture from userId */
+
+  const user = await db
+    .collection("users")
+    .findOne({ _id: userId })
+
+  return user
+}
+
+export const getUserIdFromCategory = async (db: Db, category_id: ObjectId): Promise<{}> => {
+  /* Get a user's Id from a Category Id */
+
+  const category = await db
+    .collection("categories")
+    .findOne({ _id: category_id })
+
+  return category.userId
+}
