@@ -10,8 +10,8 @@ class Map extends Component<{ cities: fullCitiesObject }, mapState> {
   constructor(props: { cities: fullCitiesObject } | Readonly<{ cities: fullCitiesObject }>) {
     super(props);
     this.state = {
-      coordinates: window.innerWidth >= 992 ? [0, 40] : [0, 0],
-      zoom: window.innerWidth >= 992 ? 1.5 : 1.9,
+      coordinates: window.innerWidth > 768 ? [0, 40] : [0, 0],
+      zoom: window.innerWidth > 768 ? 1.5 : 1.9,
     };
   }
 
@@ -80,9 +80,9 @@ class Map extends Component<{ cities: fullCitiesObject }, mapState> {
       boxHeight: '100%',
     };
     let mapValues: mapValuesObject;
-    if (aspectRatio <= 0.65 && window.innerWidth >= 992) {
+    if (aspectRatio <= 0.65 && window.innerWidth > 768) {
       mapValues = widescreenValues;
-    } else if (aspectRatio > 0.65 && window.innerWidth >= 992) {
+    } else if (aspectRatio > 0.65 && window.innerWidth > 768) {
       mapValues = mdValues;
     } else {
       mapValues = xsValues;
