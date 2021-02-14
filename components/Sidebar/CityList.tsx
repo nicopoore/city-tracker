@@ -168,7 +168,7 @@ class CityList extends Component<
       this.renderCategory(category, classes)
     );
     return (
-      <Box mb={8} width="90%">
+      <Box mb={8} px={2} width="100%">
         <List className={classes.categoryNested}>{renderedCategories}</List>
       </Box>
     );

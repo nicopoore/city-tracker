@@ -18,14 +18,21 @@ const Profile: React.FC<{ user: userObject; isOwnMap?: boolean }> = (props): JSX
   return (
     <>
       <Box bgcolor="#dadada" justifySelf="center" p={1.5} width="100%">
-        <Grid container alignItems="center" direction="row" justify="space-between" spacing={2}>
+        <Grid
+          container
+          alignItems="center"
+          direction="row"
+          justify="space-between"
+          spacing={2}
+          wrap="nowrap"
+        >
           <Grid
             container
             item
             alignItems="center"
             direction="row"
             spacing={2}
-            xs={props.isOwnMap ? 9 : 12}
+            style={{ flexGrow: 1 }}
           >
             <Grid item>
               <Avatar alt={props.user.name} src={props.user.image} />
@@ -38,7 +45,7 @@ const Profile: React.FC<{ user: userObject; isOwnMap?: boolean }> = (props): JSX
             </Grid>
           </Grid>
           {props.isOwnMap && (
-            <Grid item xs={3}>
+            <Grid>
               <Tooltip aria-label="Sign out" placement="bottom" title="Sign out">
                 <IconButton
                   aria-controls="sign-out"

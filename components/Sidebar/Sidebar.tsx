@@ -36,7 +36,7 @@ const Sidebar: React.FC<{ cities: fullCitiesObject; user: userObject; isOwnMap?:
           height="96%"
           id="sidebarBox"
           justifyContent="space-between"
-          minWidth={220}
+          minWidth={250}
           ml={2}
           mr={1}
           style={{ overflowY: 'scroll' }}
@@ -50,16 +50,11 @@ const Sidebar: React.FC<{ cities: fullCitiesObject; user: userObject; isOwnMap?:
             flexWrap="nowrap"
             justifyContent="space-between"
             overflow="scroll"
+            width="100%"
           >
             <CityList cities={props.cities} isOwnMap={props.isOwnMap} />
           </Box>
-          <Box
-            alignItems="center"
-            display="flex"
-            flexDirection="column"
-            maxWidth="400px"
-            width="100%"
-          >
+          <Box alignItems="center" display="flex" flexDirection="column" width="100%">
             {props.isOwnMap && (
               <Box position="relative" width="100%">
                 <SidebarNav cities={props.cities} />
