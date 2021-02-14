@@ -21,8 +21,22 @@ const Profile: React.FC = (): JSX.Element => {
   return (
     <>
       <Box bgcolor="#dadada" justifySelf="center" p={1.5} width="100%">
-        <Grid container alignItems="center" direction="row" justify="space-between" spacing={2}>
-          <Grid container item alignItems="center" direction="row" spacing={2} xs={9}>
+        <Grid
+          container
+          alignItems="center"
+          direction="row"
+          justify="space-between"
+          spacing={2}
+          wrap="nowrap"
+        >
+          <Grid
+            container
+            item
+            alignItems="center"
+            direction="row"
+            spacing={2}
+            style={{ flexGrow: 1 }}
+          >
             <Grid item>
               <Avatar alt={user.name} src={user.image} />
             </Grid>
@@ -30,7 +44,7 @@ const Profile: React.FC = (): JSX.Element => {
               <Typography style={{ fontWeight: 600 }}>{user.name}</Typography>
             </Grid>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item>
             <Tooltip aria-label="Sign out" placement="bottom" title="Sign out">
               <IconButton
                 aria-controls="sign-out"
