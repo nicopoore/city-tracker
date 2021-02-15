@@ -35,7 +35,7 @@ const UserCities: React.FC = (): JSX.Element => {
   if (!data)
     return (
       <>
-        <Meta userName={data.user.name} />
+        <Meta />
         <Loading currentState="Loading cities..." finishedStates={['Fetched user data...']} />
       </>
     );
