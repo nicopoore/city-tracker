@@ -12,7 +12,6 @@ const SidebarNav: React.FC<{ cities: fullCitiesObject }> = (props): JSX.Element 
   const openDialog = (): void => {
     setDialogOpen(true);
   };
-
   const closeDialog = (): void => {
     setDialogOpen(false);
   };
