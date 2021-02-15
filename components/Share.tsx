@@ -12,8 +12,11 @@ import {
 } from '@material-ui/core';
 import { Facebook, FileCopy, LinkedIn, Twitter } from '@material-ui/icons';
 import React, { useRef, useState } from 'react';
+import { userObject } from './types';
 
-const Share: React.FC<{ open; handleClose; user }> = (props): JSX.Element => {
+const Share: React.FC<{ open: boolean; handleClose: { (): void }; user: userObject }> = (
+  props
+): JSX.Element => {
   const textFieldInputRef = useRef(null);
   const [snackbarIsOpen, setSnackbarIsOpen] = useState(false);
 

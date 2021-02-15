@@ -99,7 +99,7 @@ const Profile: React.FC<{ user: userObject; isOwnMap?: boolean }> = (props): JSX
                   <ListItemIcon style={{ minWidth: '40px' }}>
                     <ShareIcon />
                   </ListItemIcon>
-                  Share map
+                  Share your map
                 </MenuItem>
                 <MenuItem aria-controls="sign-out" aria-haspopup={true} onClick={handleOpenSignout}>
                   <ListItemIcon style={{ minWidth: '40px' }}>
