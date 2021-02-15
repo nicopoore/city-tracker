@@ -37,7 +37,7 @@ const Share: React.FC<{ open: boolean; handleClose: { (): void }; user: userObje
 
   return (
     <>
-      <Dialog fullWidth open={props.open} onClose={props.handleClose}>
+      <Dialog fullWidth id="share-map" open={props.open} onClose={props.handleClose}>
         <DialogTitle>Share your map</DialogTitle>
         <DialogContent>
           <DialogContentText>

@@ -39,7 +39,7 @@ const Sidebar: React.FC<{ cities: fullCitiesObject; user: userObject; isOwnMap?:
           minWidth={250}
           ml={2}
           mr={1}
-          style={{ overflowY: 'scroll' }}
+          style={{ overflowY: 'hidden' }}
           width={220}
         >
           <Box
