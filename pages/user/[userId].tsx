@@ -35,14 +35,14 @@ const UserCities: React.FC = (): JSX.Element => {
   if (!data)
     return (
       <>
-        <Meta />
+        <Meta userName={data.user.name} />
         <Loading currentState="Loading cities..." finishedStates={['Fetched user data...']} />
       </>
     );
 
   return (
     <>
-      <Meta />
+      <Meta userName={data.user.name} />
       <Box display="flex">
         <Box alignItems="center" display="flex" height="100vh" width="100%">
           <Sidebar cities={data.cities} user={data.user} />
