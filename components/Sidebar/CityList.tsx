@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { ObjectId } from 'mongodb';
 import { mutate } from 'swr';
 import axios from 'axios';
@@ -21,7 +21,6 @@ import { ExpandLess, ExpandMore, Room, Delete } from '@material-ui/icons';
 import { City, NestedCities, Category, fullCitiesObject } from '../types';
 
 const styles = {
-  categoryNested: {},
   countryNested: {
     paddingLeft: 20,
   },
@@ -33,16 +32,18 @@ const styles = {
   },
 };
 
-class CityList extends Component<
-  { cities: fullCitiesObject; classes: any; isOwnMap?: boolean },
-  { [name: string]: any }
-> {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+interface CityListProps {
+  cities: fullCitiesObject;
+  classes: any;
+  isOwnMap?: boolean;
+}
 
-  nestDatabase = (flat: City[]): NestedCities => {
+const CityList: React.FC<CityListProps> = (props): JSX.Element => {
+  const [state, setState] = useState({});
+
+  const { classes } = props;
+
+  const nestDatabase = (flat: City[]): NestedCities => {
     /* Takes flat array from database and returns a nested (country -> city) and sorted array of objects */
 
     // Nests array
@@ -65,11 +66,11 @@ class CityList extends Component<
       }, {});
   };
 
-  renderCategory = (category: Category, classes): JSX.Element => {
-    const filteredCities = this.props.cities.cities.filter(city =>
+  const renderCategory = (category: Category, classes): JSX.Element => {
+    const filteredCities = props.cities.cities.filter(city =>
       category.cities.includes(city.place_id)
     );
-    const nestedArr = this.nestDatabase(filteredCities);
+    const nestedArr = nestDatabase(filteredCities);
 
     const count = `${category['cities'].length} ${
       category['cities'].length === 1 ? 'city' : 'cities'
@@ -87,37 +88,41 @@ class CityList extends Component<
             primary={<Typography style={{ fontWeight: 600 }}>{category.name}</Typography>}
             secondary={count}
           />
-          <ListItemSecondaryAction onClick={this.handleExpandCollapse.bind(this, category.name)}>
+          <ListItemSecondaryAction onClick={() => handleExpandCollapse(category.name)}>
             <IconButton aria-label="expand/collapse" edge="end">
-              {this.state[category.name] ? <ExpandLess /> : <ExpandMore />}
+              {state[category.name] ? <ExpandLess /> : <ExpandMore />}
             </IconButton>
           </ListItemSecondaryAction>
         </ListItem>
 
-        <Collapse key={`${category.name} li`} component="li" in={this.state[category.name]}>
+        <Collapse key={`${category.name} li`} component="li" in={state[category.name]}>
           <List className={classes.countryNested}>
-            {this.renderCountries(category._id, nestedArr, classes)}
+            {renderCountries(category._id, nestedArr, classes)}
           </List>
         </Collapse>
       </>
     );
   };
 
-  renderCountries = (category_id: ObjectId, countries: NestedCities, classes): JSX.Element[] => {
+  const renderCountries = (
+    category_id: ObjectId,
+    countries: NestedCities,
+    classes
+  ): JSX.Element[] => {
     return Object.keys(countries).map(country => (
       <>
         <ListItem key={country}>
           <ListItemText primary={country} />
-          <ListItemSecondaryAction onClick={this.handleExpandCollapse.bind(this, country)}>
+          <ListItemSecondaryAction onClick={() => handleExpandCollapse(country)}>
             <IconButton aria-label="expand/collapse" edge="end">
-              {this.state[country] ? <ExpandLess /> : <ExpandMore />}
+              {state[country] ? <ExpandLess /> : <ExpandMore />}
             </IconButton>
           </ListItemSecondaryAction>
         </ListItem>
 
-        <Collapse key={`${country} li`} component="li" in={this.state[country]}>
+        <Collapse key={`${country} li`} component="li" in={state[country]}>
           <List className={classes.cityNested}>
-            {this.renderCities(
+            {renderCities(
               category_id,
               countries[country].sort((a, b) => (a.name > b.name ? 1 : -1))
             )}
@@ -127,16 +132,16 @@ class CityList extends Component<
     ));
   };
 
-  renderCities = (
+  const renderCities = (
     category_id: ObjectId,
     cities: { name: string; place_id: string }[]
   ): JSX.Element[] => {
     return cities.map(city => (
       <ListItem key={city['name']}>
         <ListItemText primary={city['name']} />
-        {this.props.isOwnMap && (
+        {props.isOwnMap && (
           <ListItemSecondaryAction
-            onClick={this.handleRemoveCity.bind(this, { ...city, category_id: category_id })}
+            onClick={() => handleRemoveCity({ ...city, category_id: category_id })}
           >
             <Tooltip aria-label="Delete city" title="Delete city">
               <IconButton aria-label="delete" edge="end">
@@ -149,11 +154,11 @@ class CityList extends Component<
     ));
   };
 
-  handleExpandCollapse = (e: string | number): void => {
-    this.setState({ [e]: !this.state[e] });
+  const handleExpandCollapse = (e: string | number): void => {
+    setState({ ...state, [e]: !state[e] });
   };
 
-  handleRemoveCity = async (e: { place_id: string; category_id: string }): Promise<void> => {
+  const handleRemoveCity = async (e: { place_id: string; category_id: string }): Promise<void> => {
     const postData = {
       place_id: e.place_id,
       category_id: e.category_id,
@@ -163,17 +168,15 @@ class CityList extends Component<
     mutate('/api/cities');
   };
 
-  render(): JSX.Element {
-    const { classes } = this.props;
-    const renderedCategories = this.props.cities.categories.map(category =>
-      this.renderCategory(category, classes)
-    );
-    return (
-      <Box mb={this.props.isOwnMap ? 8 : 0} px={2} width="100%">
-        <List className={classes.categoryNested}>{renderedCategories}</List>
-      </Box>
-    );
-  }
-}
+  const renderedCategories = props.cities.categories.map(category =>
+    renderCategory(category, classes)
+  );
+
+  return (
+    <Box mb={props.isOwnMap ? 8 : 0} px={2} width="100%">
+      <List className={classes.categoryNested}>{renderedCategories}</List>
+    </Box>
+  );
+};
 
 export default withStyles(styles)(CityList);

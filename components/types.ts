@@ -47,10 +47,8 @@ export interface mapState {
 
 export interface mapValuesObject {
   height: number,
-  scale: number,
   width: number,
   minZoom: number,
-  maxZoom: number,
   translateExtent: number[][],
   boxMargin: number | boolean,
   boxBorderRadius: string,
