@@ -61,4 +61,5 @@ export interface userObject {
   name: string,
   email: string,
   image: string,
+  uid: string
 }
