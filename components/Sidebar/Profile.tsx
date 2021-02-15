@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import { useSession } from 'next-auth/client';
-import { Avatar, IconButton, Typography, Grid, Tooltip, Box } from '@material-ui/core';
-import { ExitToApp } from '@material-ui/icons';
-import { SignOut } from '../';
+import { Avatar, Typography, Grid, Box } from '@material-ui/core';
+import { SignOut, Share } from '../';
+import { userObject } from '../types';
+import { ProfileMenu } from '../';
 
-const Profile: React.FC = (): JSX.Element => {
+const Profile: React.FC<{ user: userObject; isOwnMap?: boolean }> = (props): JSX.Element => {
   const [signoutDialogIsOpen, setSignoutDialogIsOpen] = useState(false);
-
-  const session = useSession();
-  const user = session[0].user;
+  const [shareDialogIsOpen, setShareDialogIsOpen] = useState(false);
 
   const handleOpenSignout = (): void => {
     setSignoutDialogIsOpen(true);
@@ -16,6 +14,14 @@ const Profile: React.FC = (): JSX.Element => {
 
   const handleCloseSignout = (): void => {
     setSignoutDialogIsOpen(false);
+  };
+
+  const handleOpenShare = (): void => {
+    setShareDialogIsOpen(true);
+  };
+
+  const handleCloseShare = (): void => {
+    setShareDialogIsOpen(false);
   };
 
   return (
@@ -38,26 +44,23 @@ const Profile: React.FC = (): JSX.Element => {
             style={{ flexGrow: 1 }}
           >
             <Grid item>
-              <Avatar alt={user.name} src={user.image} />
+              <Avatar alt={props.user.name} src={props.user.image} />
             </Grid>
             <Grid item>
-              <Typography style={{ fontWeight: 600 }}>{user.name}</Typography>
+              <Typography style={{ fontWeight: 600 }}>
+                {props.user.name}
+                {props.isOwnMap ? '' : "'s map"}
+              </Typography>
             </Grid>
           </Grid>
-          <Grid item>
-            <Tooltip aria-label="Sign out" placement="bottom" title="Sign out">
-              <IconButton
-                aria-controls="sign-out"
-                aria-haspopup={true}
-                justify-self="flex-end"
-                onClick={handleOpenSignout}
-              >
-                <ExitToApp />
-              </IconButton>
-            </Tooltip>
-          </Grid>
+          <ProfileMenu
+            handleOpenShare={handleOpenShare}
+            handleOpenSignout={handleOpenSignout}
+            isOwnMap={props.isOwnMap}
+          />
         </Grid>
       </Box>
+      <Share handleClose={handleCloseShare} open={shareDialogIsOpen} user={props.user} />
       <SignOut handleClose={handleCloseSignout} open={signoutDialogIsOpen} />
     </>
   );

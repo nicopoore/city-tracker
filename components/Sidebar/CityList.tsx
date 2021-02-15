@@ -33,7 +33,7 @@ const styles = {
 };
 
 class CityList extends Component<
-  { cities: fullCitiesObject; classes: any },
+  { cities: fullCitiesObject; classes: any; isOwnMap?: boolean },
   { [name: string]: any }
 > {
   constructor(props) {
@@ -133,15 +133,17 @@ class CityList extends Component<
     return cities.map(city => (
       <ListItem key={city['name']}>
         <ListItemText primary={city['name']} />
-        <ListItemSecondaryAction
-          onClick={this.handleRemoveCity.bind(this, { ...city, category_id: category_id })}
-        >
-          <Tooltip aria-label="Delete city" title="Delete city">
-            <IconButton aria-label="delete" edge="end">
-              <Delete />
-            </IconButton>
-          </Tooltip>
-        </ListItemSecondaryAction>
+        {this.props.isOwnMap && (
+          <ListItemSecondaryAction
+            onClick={this.handleRemoveCity.bind(this, { ...city, category_id: category_id })}
+          >
+            <Tooltip aria-label="Delete city" title="Delete city">
+              <IconButton aria-label="delete" edge="end">
+                <Delete />
+              </IconButton>
+            </Tooltip>
+          </ListItemSecondaryAction>
+        )}
       </ListItem>
     ));
   };
@@ -166,7 +168,7 @@ class CityList extends Component<
       this.renderCategory(category, classes)
     );
     return (
-      <Box mb={8} px={2} width="100%">
+      <Box mb={this.props.isOwnMap ? 8 : 0} px={2} width="100%">
         <List className={classes.categoryNested}>{renderedCategories}</List>
       </Box>
     );

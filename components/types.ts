@@ -56,3 +56,10 @@ export interface mapValuesObject {
   boxBorderRadius: string,
   boxHeight: string
 }
+
+export interface userObject {
+  name: string,
+  email: string,
+  image: string,
+  uid: string
+}

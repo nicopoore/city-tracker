@@ -8,11 +8,13 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import { fullCitiesObject } from '../types';
+import { fullCitiesObject, userObject } from '../types';
 import { SidebarNav, CityList, Profile } from '../';
 import MenuIcon from '@material-ui/icons/Menu';
 
-const Sidebar: React.FC<{ cities: fullCitiesObject }> = (props): JSX.Element => {
+const Sidebar: React.FC<{ cities: fullCitiesObject; user: userObject; isOwnMap?: boolean }> = (
+  props
+): JSX.Element => {
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
   const handleDrawerOpen = (): void => {
     setDrawerIsOpen(true);
@@ -37,7 +39,7 @@ const Sidebar: React.FC<{ cities: fullCitiesObject }> = (props): JSX.Element => 
           minWidth={250}
           ml={2}
           mr={1}
-          style={{ overflowY: 'scroll' }}
+          style={{ overflowY: 'hidden' }}
           width={220}
         >
           <Box
@@ -50,13 +52,15 @@ const Sidebar: React.FC<{ cities: fullCitiesObject }> = (props): JSX.Element => 
             overflow="scroll"
             width="100%"
           >
-            <CityList cities={props.cities} />
+            <CityList cities={props.cities} isOwnMap={props.isOwnMap} />
           </Box>
           <Box alignItems="center" display="flex" flexDirection="column" width="100%">
-            <Box position="relative" width="100%">
-              <SidebarNav cities={props.cities} />
-            </Box>
-            <Profile />
+            {props.isOwnMap && (
+              <Box position="relative" width="100%">
+                <SidebarNav cities={props.cities} />
+              </Box>
+            )}
+            <Profile isOwnMap={props.isOwnMap} user={props.user} />
           </Box>
         </Box>
       </Hidden>
@@ -90,14 +94,14 @@ const Sidebar: React.FC<{ cities: fullCitiesObject }> = (props): JSX.Element => 
               flexWrap="nowrap"
               overflow="scroll"
             >
-              <CityList cities={props.cities} />
+              <CityList cities={props.cities} isOwnMap={props.isOwnMap} />
             </Box>
             <Box alignItems="center" display="flex" width="100%">
-              <Profile />
+              <Profile isOwnMap={props.isOwnMap} user={props.user} />
             </Box>
           </Box>
         </SwipeableDrawer>
-        <SidebarNav cities={props.cities} />
+        {props.isOwnMap && <SidebarNav cities={props.cities} />}
       </Hidden>
     </>
   );

@@ -1,8 +1,8 @@
-import { Map, Sidebar, Loading, SignIn, Meta } from '../components';
 import { Box, Grid } from '@material-ui/core';
-import { useSession } from 'next-auth/client';
-import useSWR from 'swr';
+import { useRouter } from 'next/router';
 import React from 'react';
+import useSWR from 'swr';
+import { Loading, Meta, Sidebar, Map } from '../../components';
 
 const fetcher = async (url: string): Promise<any> =>
   fetch(url, {
@@ -14,26 +14,11 @@ const fetcher = async (url: string): Promise<any> =>
     cache: 'default',
   }).then(res => res.json());
 
-const Home: React.FC = (): JSX.Element => {
-  const [session, loading] = useSession();
+const UserCities: React.FC = (): JSX.Element => {
+  const router = useRouter();
+  const { userId } = router.query;
 
-  if (loading) {
-    return (
-      <>
-        <Meta />
-        <Loading currentState="Fetching user data..." />
-      </>
-    );
-  }
-
-  if (!session)
-    return (
-      <>
-        <Meta />
-        <SignIn />
-      </>
-    );
-  const { data, error } = useSWR('/api/cities', fetcher);
+  const { data, error } = useSWR(`/api/user/${userId}`, fetcher);
 
   if (error)
     return (
@@ -60,12 +45,12 @@ const Home: React.FC = (): JSX.Element => {
       <Meta />
       <Box display="flex">
         <Box alignItems="center" display="flex" height="100vh" width="100%">
-          <Sidebar isOwnMap cities={data} user={session.user} />
-          <Map cities={data} />
+          <Sidebar cities={data.cities} user={data.user} />
+          <Map cities={data.cities} />
         </Box>
       </Box>
     </>
   );
 };
 
-export default Home;
+export default UserCities;

@@ -8,7 +8,7 @@ const SignIn: React.FC<{ open; handleClose }> = (props): JSX.Element => {
     window.location.reload(); // next-auth issue #532 - workaround to reload site after user signs out
   };
   return (
-    <Dialog open={props.open} onClose={props.handleClose}>
+    <Dialog id="sign-out" open={props.open} onClose={props.handleClose}>
       <DialogTitle>Are you sure you want to sign out?</DialogTitle>
       <DialogActions>
         <Button color="primary" onClick={props.handleClose}>
