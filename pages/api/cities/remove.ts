@@ -2,8 +2,8 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { ObjectId } from 'mongodb'
 import { getSession } from 'next-auth/client'
 
-import { connectToDatabase } from '../../../utils/database/connect'
-import { removeCityFromCategory, getUserIdFromCategory } from '../../../utils/database/actions'
+import { connectToDatabase } from '../../../database/connect'
+import { removeCityFromCategory, getUserIdFromCategory } from '../../../database/actions'
 
 export default async (req: NextApiRequest, res: NextApiResponse): Promise<any> => {
 

@@ -1,7 +1,9 @@
-import { Box, Grid } from '@material-ui/core';
-import { useRouter } from 'next/router';
 import React from 'react';
+import { useRouter } from 'next/router';
 import useSWR from 'swr';
+
+import { Box, Grid } from '@material-ui/core';
+
 import { Loading, Meta, Sidebar, Map } from '../../components';
 
 const fetcher = async (url: string): Promise<any> =>

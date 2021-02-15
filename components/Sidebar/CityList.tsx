@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import { ObjectId } from 'mongodb';
+import { mutate } from 'swr';
+import axios from 'axios';
+
 import {
   Box,
   Collapse,
@@ -11,13 +15,10 @@ import {
   Typography,
   Tooltip,
 } from '@material-ui/core';
-import { ExpandLess, ExpandMore, Room, Delete } from '@material-ui/icons';
-import { City, NestedCities } from '../types';
-import { Category, fullCitiesObject } from '../types';
-import axios from 'axios';
-import { ObjectId } from 'mongodb';
 import { withStyles } from '@material-ui/core/styles';
-import { mutate } from 'swr';
+import { ExpandLess, ExpandMore, Room, Delete } from '@material-ui/icons';
+
+import { City, NestedCities, Category, fullCitiesObject } from '../types';
 
 const styles = {
   categoryNested: {},

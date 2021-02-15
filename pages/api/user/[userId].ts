@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { connectToDatabase } from '../../../utils/database/connect';
+import { connectToDatabase } from '../../../database/connect';
 import { ObjectId } from 'mongodb'
-import { getUserCities, getUserData } from '../../../utils/database/actions'
+import { getUserCities, getUserData } from '../../../database/actions'
 
 export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
   // Get session, userID and connect to DB

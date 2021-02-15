@@ -1,8 +1,10 @@
-import { Map, Sidebar, Loading, SignIn, Meta } from '../components';
-import { Box, Grid } from '@material-ui/core';
-import { useSession } from 'next-auth/client';
-import useSWR from 'swr';
 import React from 'react';
+import useSWR from 'swr';
+import { useSession } from 'next-auth/client';
+
+import { Box, Grid } from '@material-ui/core';
+
+import { Map, Sidebar, Loading, SignIn, Meta } from '../components';
 
 const fetcher = async (url: string): Promise<any> =>
   fetch(url, {
