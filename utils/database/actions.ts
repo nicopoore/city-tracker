@@ -83,14 +83,14 @@ export const createCity = async (db: Db, place_id: string, name: string, country
   return city
 }
 
-export const addCityToCategory = async (db: Db, place_id: string, category_name: string, category_id: ObjectId): Promise<{}> => {
+export const addCityToCategory = async (db: Db, place_id: string, category_name: string, category_id: ObjectId, userId: ObjectId): Promise<{}> => {
   /* Check category for city, if the city isn't in the category's cities array, add it */
   /* Remove city from To visit if added to Visited and viceversa */
 
   if (category_name === 'Visited') {
-    await db.collection("categories").updateOne({ name: "To visit"}, { $pull: { cities: place_id }} )
+    await db.collection("categories").updateOne({ name: "To visit", userId: userId }, { $pull: { cities: place_id }} )
   } else if (category_name === 'To visit') {
-    await db.collection("categories").updateOne({ name: "Visited"}, { $pull : { cities: place_id }})
+    await db.collection("categories").updateOne({ name: "Visited", userId: userId }, { $pull : { cities: place_id }})
   }
 
   const category = await db

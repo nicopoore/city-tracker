@@ -69,7 +69,7 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> 
 
         // Create city, find category and add city to it
         const dbCity = await createCity(db, place_id, name, country, coordinates)
-        const dbCategory = await addCityToCategory(db, place_id, category_name, newCategory)
+        const dbCategory = await addCityToCategory(db, place_id, category_name, newCategory, userId)
 
         if (dbCity && dbCategory) {
           return res.status(200).end()
