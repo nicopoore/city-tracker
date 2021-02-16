@@ -5,9 +5,9 @@ import { ObjectId } from 'mongodb'
 
 import { connectToDatabase } from '../../../database/connect'
 import { handleNewUser, getUserCities, createCity, addCityToCategory, getUserIdFromCategory } from '../../../database/actions'
-import { City } from '../../../components/types'
+import { CityType } from '../../../components/types'
 
-const formatRawGoogle = (rawData: AxiosResponse<any>, place_id: string): City => {
+const formatRawGoogle = (rawData: AxiosResponse<any>, place_id: string): CityType => {
   const parts = rawData["data"].result.address_components
   const coor = rawData["data"].result.geometry.location
 

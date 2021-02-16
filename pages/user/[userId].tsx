@@ -47,8 +47,8 @@ const UserCities: React.FC = (): JSX.Element => {
       <Meta userName={data.user.name} />
       <Box display="flex">
         <Box alignItems="center" display="flex" height="100vh" width="100%">
-          <Sidebar cities={data.cities} user={data.user} />
-          <Map cities={data.cities} />
+          <Sidebar categories={data.categories} cities={data.cities} user={data.user} />
+          <Map categories={data.categories} cities={data.cities} />
         </Box>
       </Box>
     </>
