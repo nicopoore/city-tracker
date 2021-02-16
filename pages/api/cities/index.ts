@@ -3,8 +3,8 @@ import { getSession } from 'next-auth/client'
 import axios, { AxiosResponse } from "axios"
 import { ObjectId } from 'mongodb'
 
-import { connectToDatabase } from '../../../utils/database/connect'
-import { handleNewUser, getUserCities, createCity, addCityToCategory, getUserIdFromCategory } from '../../../utils/database/actions'
+import { connectToDatabase } from '../../../database/connect'
+import { handleNewUser, getUserCities, createCity, addCityToCategory, getUserIdFromCategory } from '../../../database/actions'
 import { City } from '../../../components/types'
 
 const formatRawGoogle = (rawData: AxiosResponse<any>, place_id: string): City => {
