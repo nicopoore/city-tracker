@@ -15,7 +15,6 @@ import { CategoryType, CityRecord, CityType, NestedCities } from '../../types';
 
 interface CategoryProps {
   category: CategoryType;
-  classes: any;
   cities: CityRecord[];
   isOwnMap: boolean;
 }
@@ -67,7 +66,7 @@ const Category: React.FC<CategoryProps> = (props): JSX.Element => {
     <>
       <ListItem key={props.category.name}>
         <ListItemIcon>
-          <Room className={props.classes.categoryIcon} style={{ color: props.category.color }} />
+          <Room style={{ color: props.category.color }} />
         </ListItemIcon>
         <ListItemText
           primary={<Typography style={{ fontWeight: 600 }}>{props.category.name}</Typography>}
