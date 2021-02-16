@@ -24,7 +24,7 @@ Wander Tracker is a Next.js website built with MERN to keep track of your favour
 
 ## Features
 
-Sign in with your Google account, add or delete cities to each of the three categories (Visited, To visit, Favorites), and fill your map with your own life experience. Hover over your pins to check the city's name and country.
+Sign in with your Google account, add or delete cities to each of the three categories (Visited, To visit, Favorites), and fill your map with your own life experience. Hover over your pins to check the city's name and country. Generate a share link to allow others to see your map!
 
 I made this project to practice new technologies, to showcase what I could do, and most of all for my personal use and to share with the world.
 
