@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 
 import { Avatar, Typography, Grid, Box } from '@material-ui/core';
 
-import { SignOutDialog, ShareDialog, UserMenu } from '..';
-import { userObject } from '../types';
+import { SignOutDialog, ShareDialog, UserMenu } from '../..';
+import { userObject } from '../../types';
 
 interface UserProps {
   user: userObject;

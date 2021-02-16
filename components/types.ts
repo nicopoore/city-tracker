@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb'
 
-export interface City {
+export interface CityType {
   name: string,
   country: string,
   coordinates: [number, number],
@@ -15,7 +15,7 @@ export interface CityRecord {
   place_id: string
 }
 
-export interface Category {
+export interface CategoryType {
   _id: ObjectId,
   name: string,
   userId: ObjectId,

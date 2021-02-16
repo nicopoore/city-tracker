@@ -62,8 +62,8 @@ const Home: React.FC = (): JSX.Element => {
       <Meta />
       <Box display="flex">
         <Box alignItems="center" display="flex" height="100vh" width="100%">
-          <Sidebar isOwnMap cities={data} user={session.user} />
-          <Map cities={data} />
+          <Sidebar isOwnMap categories={data.categories} cities={data.cities} user={session.user} />
+          <Map categories={data.categories} cities={data.cities} />
         </Box>
       </Box>
     </>

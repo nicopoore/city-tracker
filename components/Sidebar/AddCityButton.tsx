@@ -4,9 +4,11 @@ import { Add } from '@material-ui/icons';
 import { Box, Fab, Tooltip } from '@material-ui/core';
 
 import AddCityDialog from '../Dialogs/AddCity';
-import { fullCitiesObject } from '../types';
+import { CategoryRecord, CityRecord } from '../types';
 
-const SidebarNav: React.FC<{ cities: fullCitiesObject }> = (props): JSX.Element => {
+const SidebarNav: React.FC<{ cities: CityRecord[]; categories: CategoryRecord[] }> = (
+  props
+): JSX.Element => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const openDialog = (): void => {
@@ -27,7 +29,12 @@ const SidebarNav: React.FC<{ cities: fullCitiesObject }> = (props): JSX.Element 
           </Tooltip>
         </Box>
       </Box>
-      <AddCityDialog cities={props.cities} closeAddCity={closeDialog} open={dialogOpen} />
+      <AddCityDialog
+        categories={props.categories}
+        cities={props.cities}
+        closeAddCity={closeDialog}
+        open={dialogOpen}
+      />
     </>
   );
 };

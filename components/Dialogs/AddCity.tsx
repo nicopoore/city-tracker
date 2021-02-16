@@ -16,12 +16,13 @@ import {
 } from '@material-ui/core';
 import { Room } from '@material-ui/icons';
 
-import { fullCitiesObject } from '../types';
+import { CategoryRecord, CityRecord } from '../types';
 
 interface AddCityProps {
   open: boolean;
   closeAddCity: () => void;
-  cities: fullCitiesObject;
+  cities: CityRecord[];
+  categories: CategoryRecord[];
 }
 
 const AddCity: React.FC<AddCityProps> = (props): JSX.Element => {
@@ -98,7 +99,7 @@ const AddCity: React.FC<AddCityProps> = (props): JSX.Element => {
         <DialogContent style={{ overflowY: 'visible' }}>
           <DialogContentText>Select the city&apos;s category</DialogContentText>
           <List>
-            {props.cities.categories.map(category => (
+            {props.categories.map(category => (
               <ListItem
                 key={category['name']}
                 button

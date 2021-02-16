@@ -3,12 +3,14 @@ import { ComposableMap, Geographies, Geography, Marker, ZoomableGroup } from 're
 
 import { Box, Tooltip } from '@material-ui/core';
 
-import { CategoryRecord, fullCitiesObject, mapState, mapValuesObject } from '../types';
+import { CategoryRecord, CityRecord, mapState, mapValuesObject } from '../types';
 
 const geoUrl =
   'https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json';
 
-const Map: React.FC<{ cities: fullCitiesObject }> = (props): JSX.Element => {
+const Map: React.FC<{ cities: CityRecord[]; categories: CategoryRecord[] }> = (
+  props
+): JSX.Element => {
   const [state, setState] = useState({
     coordinates: window.innerWidth > 768 ? [0, 40] : [0, 0],
     zoom: window.innerWidth > 768 ? 1.5 : 1.9,
@@ -51,6 +53,7 @@ const Map: React.FC<{ cities: fullCitiesObject }> = (props): JSX.Element => {
     boxBorderRadius: '0',
     boxHeight: '100%',
   };
+
   let mapValues: mapValuesObject;
   if (aspectRatio <= 0.65 && window.innerWidth > 768) {
     mapValues = widescreenValues;
@@ -61,9 +64,7 @@ const Map: React.FC<{ cities: fullCitiesObject }> = (props): JSX.Element => {
   }
 
   const renderMarkers = (category: CategoryRecord): JSX.Element[] => {
-    const filteredCities = props.cities.cities.filter(city =>
-      category.cities.includes(city.place_id)
-    );
+    const filteredCities = props.cities.filter(city => category.cities.includes(city.place_id));
 
     let size = (1.5 + state.zoom / 10) / state.zoom;
 
@@ -121,7 +122,7 @@ const Map: React.FC<{ cities: fullCitiesObject }> = (props): JSX.Element => {
               ))
             }
           </Geographies>
-          {props.cities.categories.map(category => renderMarkers(category))}
+          {props.categories.map(category => renderMarkers(category))}
         </ZoomableGroup>
       </ComposableMap>
     </Box>

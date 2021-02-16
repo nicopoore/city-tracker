@@ -11,11 +11,12 @@ import {
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 
-import { fullCitiesObject, userObject } from '../types';
+import { CategoryRecord, CityRecord, userObject } from '../types';
 import { AddCityButton, CityList, User } from '../';
 
 interface SidebarProps {
-  cities: fullCitiesObject;
+  cities: CityRecord[];
+  categories: CategoryRecord[];
   user: userObject;
   isOwnMap?: boolean;
 }
@@ -60,12 +61,16 @@ const Sidebar: React.FC<SidebarProps> = (props): JSX.Element => {
             overflow="scroll"
             width="100%"
           >
-            <CityList cities={props.cities} isOwnMap={props.isOwnMap} />
+            <CityList
+              categories={props.categories}
+              cities={props.cities}
+              isOwnMap={props.isOwnMap}
+            />
           </Box>
           <Box alignItems="center" display="flex" flexDirection="column" width="100%">
             {props.isOwnMap && (
               <Box position="relative" width="100%">
-                <AddCityButton cities={props.cities} />
+                <AddCityButton categories={props.categories} cities={props.cities} />
               </Box>
             )}
             <User isOwnMap={props.isOwnMap} user={props.user} />
@@ -102,14 +107,18 @@ const Sidebar: React.FC<SidebarProps> = (props): JSX.Element => {
               flexWrap="nowrap"
               overflow="scroll"
             >
-              <CityList cities={props.cities} isOwnMap={props.isOwnMap} />
+              <CityList
+                categories={props.categories}
+                cities={props.cities}
+                isOwnMap={props.isOwnMap}
+              />
             </Box>
             <Box alignItems="center" display="flex" width="100%">
               <User isOwnMap={props.isOwnMap} user={props.user} />
             </Box>
           </Box>
         </SwipeableDrawer>
-        {props.isOwnMap && <AddCityButton cities={props.cities} />}
+        {props.isOwnMap && <AddCityButton categories={props.categories} cities={props.cities} />}
       </Hidden>
     </>
   );
